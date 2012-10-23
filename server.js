@@ -18,9 +18,7 @@ var _ = require( 'underscore' ),
     requirejs = require( 'requirejs' ),
     semver = require( 'semver' ),
     url = require( 'url' ),
-    zip = require("node-native-zip" ),
-    cp = require( "child_process" ),
-    grunt = cp.spawn( "grunt", [ "--force", "watch" ] );
+    zip = require("node-native-zip" );
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = { 'index.html': '','builder.html':'' };
@@ -57,7 +55,7 @@ function buildDependencyMap( project, baseUrl, include ) {
             // Recurse through directories in dir and collect a list of files that gets filtered by filterFn
             // The resulting list is processed by mapFn (remove extension for instance)
             fs.readdir( dir, function( err, dirEntries ) {
-//                    logger.log( "buildDependencyMap["+id+"](): step 1.1" );
+//                    console.log( "buildDependencyMap["+id+"](): step 1.1" );
                 var filteredFiles, include;
 
                 if ( err ) {
@@ -125,7 +123,7 @@ function buildDependencyMap( project, baseUrl, include ) {
       project.checkoutIfEmpty( next );
     },
         function( next ) {
-//            logger.log( "buildDependencyMap["+id+"](): step 1" );
+            console.log( "buildDependencyMap["+id+"](): step 1" );
             // If no name is provided, scan the baseUrl for js files and return the dep map for all JS objects in baseUrl
             if ( include && include.length > 0 ) {
                 next();
@@ -146,18 +144,18 @@ function buildDependencyMap( project, baseUrl, include ) {
             }
         },
         function( next ) {
-//            logger.log( "buildDependencyMap["+id+"](): step 2" );
+            console.log( "buildDependencyMap["+id+"](): step 2" );
             // Generate a sha on the sorted names
             var digest = shasum.update( include.join( "," ) ).digest( "hex" );
 
             filename += path.join(compileDir, "deps-" + digest + ".json" );
-
+            console.log(filename);
             fs.exists( filename, function( exists ) {
                 next( null, digest, exists );
             });
         },
         function( digest, exists, next ) {
-//            logger.log( "buildDependencyMap["+id+"](): step 3" );
+            console.log( "buildDependencyMap["+id+"](): step 3" );
             if ( exists ){
                 fs.readFile( filename, "utf8", function( err, data ) {
                     if ( err ) {
@@ -171,7 +169,7 @@ function buildDependencyMap( project, baseUrl, include ) {
                     dependenciesPromises[ digest ] = promise;
                     async.waterfall([
                         function( cb ) {
-//                            logger.log( "buildDependencyMap["+id+"](): step 3.1" );
+                           console.log( "buildDependencyMap["+id+"](): step 3.1" );
                             fs.mkdir( compileDir, function( err ) {
                                 if ( err && err.code != "EEXIST" ) {
                                     cb( err );
@@ -181,7 +179,7 @@ function buildDependencyMap( project, baseUrl, include ) {
                             });
                         },
                         function( cb ) {
-//                            logger.log( "buildDependencyMap["+id+"](): step 3.2" );
+                           console.log( "buildDependencyMap["+id+"](): step 3.2" );
                             requirejs.tools.useLib( function ( r ) {
                                 r( [ 'parse' ], function ( parse ) {
                                     cb( null, parse );
@@ -189,12 +187,12 @@ function buildDependencyMap( project, baseUrl, include ) {
                             });
                         },
                         function( parse, cb ) {
-//                            logger.log( "buildDependencyMap["+id+"](): step 3.3" );
+                           console.log( "buildDependencyMap["+id+"](): step 3.3" );
                             var deps = {};
                             async.forEach( include, function ( name, done ) {
                                 var fileName = path.join( baseUrl, name + ".js" ),
                                     dirName = path.dirname( fileName );
-//                                logger.log( "Processing: " + fileName );
+                                console.log( "Processing: " + fileName );
                                 fs.readFile( fileName, 'utf8', function( err, data ) {
                                     if ( err ) {
                                         callback( err );
@@ -213,7 +211,7 @@ function buildDependencyMap( project, baseUrl, include ) {
                             });
                         },
                         function( deps, cb ) {
-//                            logger.log( "buildDependencyMap["+id+"](): step 3.4" );
+                            console.log( "buildDependencyMap["+id+"](): step 3.4" );
                             // Walk through the dep map and remove baseUrl and js extension
                             var module,
                                 modules = [],
@@ -226,12 +224,11 @@ function buildDependencyMap( project, baseUrl, include ) {
                             async.forEach( modules,
                                 function( item, callback ) {
                                     async.waterfall([
-                                        function( next ) {
-//                                            logger.log( "buildDependencyMap["+id+"](): step 3.4.1" );
+                                        function( next ) {                                            console.log( "buildDependencyMap["+id+"](): step 3.4.1" );
                                             fs.readFile( path.join( baseUrl, item+".js" ), 'utf8', next );
                                         },
                                         function( data, next ) {
-//                                            logger.log( "buildDependencyMap["+id+"](): step 3.4.2" );
+                                           console.log( "buildDependencyMap["+id+"](): step 3.4.2" );
                                             var lines = data.split( "\n" ),
                                                 matches = lines.filter( function( line, index ) {
                                                     return /^.*\/\/>>\s*[^:]+:.*$/.test( line );
@@ -267,7 +264,7 @@ function buildDependencyMap( project, baseUrl, include ) {
                             );
                         },
                         function( deps, cb ){
-//                            logger.log( "buildDependencyMap["+id+"](): step 3.5" );
+                            console.log( "buildDependencyMap["+id+"](): step 3.5" );
                             fs.writeFile( filename, JSON.stringify( deps ), "utf8",
                                 function( err ) {
                                     cb( err, deps );
@@ -306,7 +303,7 @@ function applyFilter( baseUrl, filter, contents, ext, callback ) {
 var bjsid = 0;
 function buildJSBundle( project, config, name, filter, optimize ) {
     var id = bjsid ++;
-//    logger.log( "buildJSBundle["+id+"]()" );
+//    console.log( "buildJSBundle["+id+"]()" );
     var promise = new Promise(),
         baseUrl = config.baseUrl,
         wsDir = project.getWorkspaceDirSync(),
@@ -315,14 +312,14 @@ function buildJSBundle( project, config, name, filter, optimize ) {
 
     fs.exists( out, function ( exists ) {
         if ( exists ) {
-//            logger.log( "buildJSBundle: resolving promise" );
+//            console.log( "buildJSBundle: resolving promise" );
             promise.resolve( out );
         } else {
             async.waterfall([
                 function( next ) {
-//                    logger.log( "buildJSBundle["+id+"](): step 1" );
+//                    console.log( "buildJSBundle["+id+"](): step 1" );
                     var outDir = path.dirname( config.out );
-//                    logger.log( "mkdir '" + outDir + "'" );
+//                    console.log( "mkdir '" + outDir + "'" );
                     fs.mkdir( outDir, function( err ) {
                         if ( err && err.code != "EEXIST" ) {
                             next( err );
@@ -332,7 +329,7 @@ function buildJSBundle( project, config, name, filter, optimize ) {
                     });
                 },
                 function( next ) {
-//                    logger.log( "buildJSBundle["+id+"](): step 2" );
+//                    console.log( "buildJSBundle["+id+"](): step 2" );
                     try {
                         requirejs.optimize(
                             _.extend({
@@ -348,11 +345,11 @@ function buildJSBundle( project, config, name, filter, optimize ) {
                     }
                 },
                 function( response, next ) {
-//                    logger.log( "buildJSBundle["+id+"](): step 3" );
+//                    console.log( "buildJSBundle["+id+"](): step 3" );
                     fs.readFile( out, 'utf8', next );
                 },
                 function ( contents, next ) {
-//                    logger.log( "buildJSBundle["+id+"](): step 4" );
+//                    console.log( "buildJSBundle["+id+"](): step 4" );
                     applyFilter( baseUrl, filter, contents, ext, next );
                 },
                 function( contents, next ) {
@@ -362,7 +359,7 @@ function buildJSBundle( project, config, name, filter, optimize ) {
                 if( err ) {
                     promise.reject( err );
                 } else {
-//                    logger.log( "buildJSBundle: resolving promise" );
+//                    console.log( "buildJSBundle: resolving promise" );
                     promise.resolve( out );
                 }
             });
@@ -372,7 +369,7 @@ function buildJSBundle( project, config, name, filter, optimize ) {
 }
 
 function buildZipBundle( project, name, config, digest, filter )  {
-//    logger.log( "buildZipBundle()" );
+//    console.log( "buildZipBundle()" );
     var promise = new Promise(),
         baseUrl = config.baseUrl,
         basename = path.basename( name, ".zip" ),
@@ -424,7 +421,7 @@ function buildZipBundle( project, name, config, digest, filter )  {
 }
 
 app.get( '/v1/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
-  logger.log( "Building bundle for " + req.params.owner + "/" + req.params.repo + " ref: " + req.params.ref );
+  console.log( "Building bundle for " + req.params.owner + "/" + req.params.repo + " ref: " + req.params.ref );
     var project = new Project( req.params.owner, req.params.repo, req.params.ref ),
         include = req.param( "include", "main" ).split( "," ).sort(),
         exclude = req.param( "exclude", "" ).split( "," ).sort(),
@@ -472,7 +469,7 @@ app.get( '/v1/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
 
     digest = shasum.digest( 'hex' );
 
-    logger.log( digest + ": " + JSON.stringify( config ) );
+    console.log( digest + ": " + JSON.stringify( config ) );
 
     if ( filter ) {
         // Setting the flag for later clean up
