@@ -224,8 +224,9 @@ function buildDependencyMap( project, baseUrl, include ) {
                             async.forEach( modules,
                                 function( item, callback ) {
                                     async.waterfall([
-                                        function( next ) {                                            console.log( "buildDependencyMap["+id+"](): step 3.4.1" );
-                                            fs.readFile( path.join( baseUrl, item+".js" ), 'utf8', next );
+                                        function( next ) {
+                                          console.log( "buildDependencyMap["+id+"](): step 3.4.1" );
+                                          fs.readFile( path.join( baseUrl, item+".js" ), 'utf8', next );
                                         },
                                         function( data, next ) {
                                            console.log( "buildDependencyMap["+id+"](): step 3.4.2" );
@@ -239,7 +240,11 @@ function buildDependencyMap( project, baseUrl, include ) {
                                                         attrLabelRE = new RegExp( "^.*" + regexp.escapeString( "//>>" + attr + ":") + "\\s*", "m" ),
                                                         value = meta.replace( attrLabelRE, "" ).trim(),
                                                         namespace, name,
-                                                        indexOfDot = attr.indexOf( "." );
+                                                        indexOfDot = attr.indexOf( "." ),
+                                                        dependsArray;
+                                                    if( attr === "depend" ) {
+                                                      value = value.split(",");
+                                                    }
                                                     if ( indexOfDot > 0 ) { // if there is something before the dot
                                                         namespace = attr.split( "." )[0];
                                                         name = attr.substring( indexOfDot+1 );

@@ -97,8 +97,8 @@ $( function( $ ) {
 		buildCheckListFor = function( id, hash ) {
 			var module = dependencyMap[ id ];
 			hash = hash || {};
-			if ( module && module.deps ) {
-				_.each( module.deps, function( name, index ) {
+			if ( module && module.depend ) {
+				_.each( module.depend, function( name, index ) {
 					if ( !( name in hash) ) {
 						hash[ name ] = true;
 						buildCheckListFor( name, hash );
@@ -111,7 +111,7 @@ $( function( $ ) {
 			hash = hash || {};
 			_.each( dependencyMap, function( module, name ) {
 				if ( !( name in hash ) ) {
-					if ( _.indexOf( module.deps, id ) > -1 ) {
+					if ( _.indexOf( module.depend, id ) > -1 ) {
 						hash[ name ] = true;
 						buildUncheckListFor( name, hash );
 					}
@@ -150,12 +150,12 @@ $( function( $ ) {
 			$.getJSON( host ).done(
 				function( data ) {
 					dependencyMap = data;
-					// Clean up deps attr from relative paths and plugins
+					// Clean up depend attr from relative paths and plugins
 					_.each( dependencyMap, function( value, key, map ) {
 						if ( value.group && value.group === "exclude" ) {
 							delete map[ key ];
-						} else if ( value.deps ) {
-							_.each( value.deps, function( v, k, m ) {
+						} else if ( value.depend ) {
+							_.each( value.depend, function( v, k, m ) {
 								m[ k ] = m[ k ].replace( /^.*!/, "" );  // remove the plugin part
 								m[ k ] = m[ k ].replace( /\[.*$/, "" ); // remove the plugin arguments at the end of the path
 								m[ k ] = m[ k ].replace( /^\.\//, "" ); // remove the relative path "./"
