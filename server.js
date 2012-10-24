@@ -24,9 +24,11 @@ var zcache = { 'index.html': '','builder.html':'' };
 zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
 zcache['builder.html'] = fs.readFileSync( "./builder.html" );
 
+var dataDir = process.env.OPENSHIFT_DATA_DIR || "/Users/lholmquist/develop/projects/";
+
 var Project = require( './lib/project' )
     .repoDir( "" )
-    .stagingDir( "/Users/lholmquist/develop/projects/aerogear-js-stage/" )
+    .stagingDir( dataDir + "aerogear-js-stage/" )
     .Project,
   filters = {},
   bundlePromises = {},
@@ -602,7 +604,6 @@ app.get( "/js/*", function( req, res ) {
 //  Get the environment variables we need.
 var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP;
 var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
-var dataDir = process.env.OPENSHIFT_DATA_DIR;
 
 if (typeof ipaddr === "undefined") {
    console.warn('No OPENSHIFT_INTERNAL_IP environment variable');
