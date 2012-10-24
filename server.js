@@ -618,7 +618,6 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
         if( err ) {
             console.log( "gruntbase"+err );
         }
-        console.log(data);
         //build replacement
         var replacement = "[" + zcache[ "banner" ] + ", ";
         _.each( config.include, function( val, index, list ) {
@@ -632,7 +631,10 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
         var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'dist/<%= pkg.name %>." + hash + ".js'" );
 
         fs.writeFile('./data/aerogear-js-stage/lholmquist/master/' + hash + '.js',temp,'utf8',function( err ){
-            if( err ) throw err;
+            if( err ) {
+                console.log( "oh snap" + err);
+                throw err;
+            }
 
             var util  = require('util'),
             spawn = require('child_process').spawn,
