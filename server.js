@@ -569,7 +569,7 @@ console.log( config.include );
 });
 
 app.get( '/aerogearjsbuilder/dependencies/:owner/:repo/:ref', function ( req, res ) {
-    console.log( dataDir );
+    //console.log( dataDir );
     var project = new Project( req.params.owner, req.params.repo, req.params.ref ),
         names = req.param( "names", "" ).split( "," ).filter( function(name) {return !!name;} ).sort(),
         exclude = req.param( "exclude", "" ).split( "," ).sort(),
