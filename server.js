@@ -616,7 +616,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
 
     fs.readFile( "./data/aerogear-js-stage/lholmquist/master/gruntbase.js","utf-8", function( err, data){
         if( err ) {
-            console.log( err );
+            console.log( "gruntbase"+err );
         }
 
         //build replacement
@@ -649,14 +649,14 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             grunt.on('exit', function (code) {
                 res.send( fs.readFileSync("./data/aerogear-js-stage/lholmquist/master/dist/aerogear."+hash+".js" ) );
                 console.log('child process exited with code ' + code);
-                fs.unlink("./data/aerogear-js-stage/lholmquist/master/"+hash+".js", function( err ){
+                /*fs.unlink("./data/aerogear-js-stage/lholmquist/master/"+hash+".js", function( err ){
                     if ( err ) throw err;
                     console.log( 'file deleted' );
                 });
                 fs.unlink("./data/aerogear-js-stage/lholmquist/master/dist/aerogear."+hash+".js", function( err ){
                     if ( err ) throw err;
                     console.log( 'file deleted' );
-                });
+                });*/
             });
 
         });
