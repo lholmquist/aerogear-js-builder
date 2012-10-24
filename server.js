@@ -618,7 +618,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
         if( err ) {
             console.log( "gruntbase"+err );
         }
-
+        console.log(data);
         //build replacement
         var replacement = "[" + zcache[ "banner" ] + ", ";
         _.each( config.include, function( val, index, list ) {
