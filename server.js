@@ -635,7 +635,6 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                 console.log( "oh snap" + err);
                 throw err;
             }
-
             var util  = require('util'),
             spawn = require('child_process').spawn,
             grunt = spawn( "grunt",["--config", hash + ".js"],{cwd:"./data/aerogear-js-stage/lholmquist/master/"} );
