@@ -242,7 +242,7 @@ function buildDependencyMap( project, baseUrl, include ) {
                                                         namespace, name,
                                                         indexOfDot = attr.indexOf( "." ),
                                                         dependsArray;
-                                                    if( attr === "depend" ) {
+                                                    if( attr === "deps" ) {
                                                       value = value.split(",");
                                                     }
                                                     if ( indexOfDot > 0 ) { // if there is something before the dot
@@ -317,15 +317,16 @@ function buildJSBundle( project, config, name, filter, optimize ) {
 
     fs.exists( out, function ( exists ) {
         if ( exists ) {
-//            console.log( "buildJSBundle: resolving promise" );
+            console.log( "buildJSBundle: resolving promise" );
             promise.resolve( out );
         } else {
             async.waterfall([
                 function( next ) {
-//                    console.log( "buildJSBundle["+id+"](): step 1" );
+                    console.log( "buildJSBundle["+id+"](): step 1" );
                     var outDir = path.dirname( config.out );
-//                    console.log( "mkdir '" + outDir + "'" );
+                    console.log( "mkdir '" + outDir + "'" );
                     fs.mkdir( outDir, function( err ) {
+                        console.log(err);
                         if ( err && err.code != "EEXIST" ) {
                             next( err );
                         } else {
@@ -334,7 +335,7 @@ function buildJSBundle( project, config, name, filter, optimize ) {
                     });
                 },
                 function( next ) {
-//                    console.log( "buildJSBundle["+id+"](): step 2" );
+                    console.log( "buildJSBundle["+id+"](): step 2" );
                     try {
                         requirejs.optimize(
                             _.extend({
@@ -350,11 +351,11 @@ function buildJSBundle( project, config, name, filter, optimize ) {
                     }
                 },
                 function( response, next ) {
-//                    console.log( "buildJSBundle["+id+"](): step 3" );
+                    console.log( "buildJSBundle["+id+"](): step 3" );
                     fs.readFile( out, 'utf8', next );
                 },
                 function ( contents, next ) {
-//                    console.log( "buildJSBundle["+id+"](): step 4" );
+                    console.log( "buildJSBundle["+id+"](): step 4" );
                     applyFilter( baseUrl, filter, contents, ext, next );
                 },
                 function( contents, next ) {
@@ -374,7 +375,7 @@ function buildJSBundle( project, config, name, filter, optimize ) {
 }
 
 function buildZipBundle( project, name, config, digest, filter )  {
-//    console.log( "buildZipBundle()" );
+    console.log( "buildZipBundle()" );
     var promise = new Promise(),
         baseUrl = config.baseUrl,
         basename = path.basename( name, ".zip" ),
@@ -441,13 +442,8 @@ app.get( '/v1/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
         filter = req.param( "filter" ),
         shasum = crypto.createHash( 'sha1' ),
         wsDir   = project.getWorkspaceDirSync(),
-        baseUrl =  path.join( wsDir, req.param( "baseUrl", "." ) ),
+        baseUrl = wsDir,
         dstDir, dstFile, digest, hash;
-
-    if ( wrap ) {
-        wrap.startFile = path.join( baseUrl, wrap.startFile );
-        wrap.endFile = path.join( baseUrl, wrap.endFile );
-    }
 
     // var baseUrlFilters[baseUrl] = require(path.join(baseUrl, 'somemagicnameOrpackage.jsonEntry.js'));
   var config = {
@@ -460,7 +456,7 @@ app.get( '/v1/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
         skipModuleInsertion: req.param( "skipModuleInsertion", "false" ) === "true" ,
         preserveLicenseComments: req.param( "preserveLicenseComments", "true" ) === "true"
   };
-
+console.log( config.include );
     shasum.update( JSON.stringify( config ) );
     shasum.update( mimetype );
     if ( filter ) {
@@ -489,6 +485,7 @@ app.get( '/v1/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
     }
 
     function onBundleBuildError( error ) {
+        console.log(error);
         res.header( "Access-Control-Allow-Origin", "*");
         res.send( error, 500 );
         delete bundlePromises[ digest ];
