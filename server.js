@@ -151,7 +151,7 @@ function buildDependencyMap( project, baseUrl, include ) {
 
             filename += path.join(compileDir, "deps-" + digest + ".json" );
             console.log(filename);
-            fs.exists( filename, function( exists ) {
+            fs.readFile( filename, function( err, exists ) {
                 next( null, digest, exists );
             });
         },
