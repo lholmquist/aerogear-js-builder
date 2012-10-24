@@ -204,7 +204,7 @@ $( function( $ ) {
 
 			$( "#download" ).html(
 				$( "<iframe>" )
-					.attr( "src",'/v1/bundle/lholmquist/aerogear-js/' + branch + '/aerogear.mobile.custom.zip?' + $.param( config ) )
+					.attr( "src",'/aerogearjsbuilder/bundle/lholmquist/aerogear-js/' + branch + '/aerogear.mobile.custom.zip?' + $.param( config ) )
 			);
 
 			// I could not leverage iframe.onload to re-enable the button :-/

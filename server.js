@@ -21,25 +21,8 @@ var _ = require( 'underscore' ),
 
 var dataDir = process.env.OPENSHIFT_DATA_DIR || "/Users/lholmquist/develop/projects/";
 
-var util  = require('util'),
-    spawn = require('child_process').spawn,
-    grunt = spawn( "grunt",[],{cwd:dataDir + "aerogear-js-stage/lholmquist/master/"} ),
-    ls    = spawn('ls', ['-lh', '/usr']);
-
-grunt.stdout.on('data', function (data) {
-  console.log('stdout: ' + data);
-});
-
-grunt.stderr.on('data', function (data) {
-  console.log('stderr: ' + data);
-});
-
-grunt.on('exit', function (code) {
-  console.log('child process exited with code ' + code);
-});
-
 //  Local cache for static content [fixed and loaded at startup]
-var zcache = { 'index.html': '','builder.html':'' };
+var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:aerogear-js/", 'aerogearend':">'"};
 zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
 zcache['builder.html'] = fs.readFileSync( "./builder.html" );
 
@@ -476,7 +459,6 @@ app.get( '/v1/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
         skipModuleInsertion: req.param( "skipModuleInsertion", "false" ) === "true" ,
         preserveLicenseComments: req.param( "preserveLicenseComments", "true" ) === "true"
   };
-console.log( config.include );
     shasum.update( JSON.stringify( config ) );
     shasum.update( mimetype );
     if ( filter ) {
@@ -489,14 +471,6 @@ console.log( config.include );
     }
 
     digest = shasum.digest( 'hex' );
-
-    console.log( digest + ": " + JSON.stringify( config ) );
-
-    if ( filter ) {
-        // Setting the flag for later clean up
-        filters[ project.getWorkspaceDirSync() ] = filters[ project.getWorkspaceDirSync() ] || {};
-        filters[ project.getWorkspaceDirSync() ][ path.join( baseUrl, filter ) ] = true;
-    }
 
     if ( mimetype === "application/zip" ) {
         hash = digest;
@@ -605,6 +579,88 @@ app.get( '/aerogearjsbuilder/dependencies/:owner/:repo/:ref', function ( req, re
         });
 });
 
+app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
+    var project = new Project( req.params.owner, req.params.repo, req.params.ref ),
+        include = req.param( "include", "main" ).split( "," ).sort(),
+        exclude = req.param( "exclude", "" ).split( "," ).sort(),
+        optimize = Boolean( req.param( "optimize", false ) ).valueOf(),
+        name = req.params.name || ( req.params.repo + ".js" ),
+        ext = (optimize !== "none" ? ".min" : "") + ( path.extname( name ) || ".js" ),
+        mimetype = mime.lookup( ext ),
+        shasum = crypto.createHash( 'sha1' ),
+        wsDir   = project.getWorkspaceDirSync(),
+        baseUrl = wsDir,
+        dstDir, dstFile, digest, hash;
+
+    // var baseUrlFilters[baseUrl] = require(path.join(baseUrl, 'somemagicnameOrpackage.jsonEntry.js'));
+  var config = {
+    baseUrl: baseUrl,
+    include: include,
+    exclude: exclude
+  };
+    shasum.update( JSON.stringify( config ) );
+    shasum.update( mimetype );
+
+    if ( mimetype === "application/zip" ) {
+        // For the zip file, the name needs to be part of the hash because it will determine the name of the files inside the zip file
+        shasum.update( name );
+    }
+
+    digest = shasum.digest( 'hex' );
+
+    if ( mimetype === "application/zip" ) {
+        hash = digest;
+    } else {
+        hash += ( optimize ? ".min" : "" );
+    }
+
+    fs.readFile( "./data/aerogear-js-stage/lholmquist/master/gruntbase.js","utf-8", function( err, data){
+    if( err ) {
+        console.log( err );
+    }
+
+    //build replacement
+    var replacement = "[" + zcache[ "banner" ] + ", ";
+    _.each( config.include, function( val, index, list ) {
+        replacement += zcache[ "aerogearstart" ] + val + ".js" + zcache[ "aerogearend" ];
+        if( (index+1) !== list.length ) {
+            replacement += ", ";
+        }
+    });
+
+    replacement += "]";
+    var temp = data.replace("\"@SRC@\"", replacement);
+
+    fs.writeFile('./data/aerogear-js-stage/lholmquist/master/' + hash + '.js',temp,'utf8',function( err ){
+        if( err ) throw err;
+        console.log("file saved");
+
+    var util  = require('util'),
+    spawn = require('child_process').spawn,
+    grunt = spawn( "grunt",["--config", hash + ".js"],{cwd:"./data/aerogear-js-stage/lholmquist/master/"} );
+
+    grunt.stdout.on('data', function (data) {
+  console.log('stdout: ' + data);
+});
+
+grunt.stderr.on('data', function (data) {
+  console.log('stderr: ' + data);
+});
+
+grunt.on('exit', function (code) {
+  console.log('child process exited with code ' + code);
+  fs.unlink("./data/aerogear-js-stage/lholmquist/master/"+hash+".js", function( err ){
+    if ( err ) throw err;
+    console.log( 'file deleted' );
+  });
+});
+
+    });
+
+
+    res.send("success");
+    });
+});
 
 // Handler for GET /
 app.get('/', function(req, res){
