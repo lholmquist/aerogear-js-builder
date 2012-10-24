@@ -19,6 +19,25 @@ var _ = require( 'underscore' ),
     url = require( 'url' ),
     zip = require("node-native-zip" );
 
+var dataDir = process.env.OPENSHIFT_DATA_DIR || "/Users/lholmquist/develop/projects/";
+
+var util  = require('util'),
+    spawn = require('child_process').spawn,
+    grunt = spawn( "grunt",[],{cwd:dataDir + "aerogear-js-stage/lholmquist/master/"} ),
+    ls    = spawn('ls', ['-lh', '/usr']);
+
+grunt.stdout.on('data', function (data) {
+  console.log('stdout: ' + data);
+});
+
+grunt.stderr.on('data', function (data) {
+  console.log('stderr: ' + data);
+});
+
+grunt.on('exit', function (code) {
+  console.log('child process exited with code ' + code);
+});
+
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = { 'index.html': '','builder.html':'' };
 zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
