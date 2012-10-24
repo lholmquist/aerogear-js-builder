@@ -193,18 +193,12 @@ $( function( $ ) {
 
 			config = {
 				baseUrl: "js",
-				include: formData.map( function() { return domId2module( $( this ).attr( 'id' ) ); } ).toArray().join( "," ),
-				// The excludes need to be kept in sync with the ones in jQM's Makefile
-				exclude: exclude.join( "," ),
-				pragmasOnSave: '{ "jqmBuildExclude": true }',
-				preserveLicenseComments: false,
-				skipModuleInsertion: true,
-				filter: "../build/filter"
+				include: formData.map( function() { return domId2module( $( this ).attr( 'id' ) ); } ).toArray().join( "," )
 			};
 
 			$( "#download" ).html(
 				$( "<iframe>" )
-					.attr( "src",'/aerogearjsbuilder/bundle/lholmquist/aerogear-js/' + branch + '/aerogear.mobile.custom.zip?' + $.param( config ) )
+					.attr( "src",'/aerogearjsbuilder/bundle/lholmquist/aerogear-js/' + branch + '/aerogear.mobile.custom.js?' + $.param( config ) )
 			);
 
 			// I could not leverage iframe.onload to re-enable the button :-/

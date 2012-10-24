@@ -593,11 +593,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
         dstDir, dstFile, digest, hash;
 
     // var baseUrlFilters[baseUrl] = require(path.join(baseUrl, 'somemagicnameOrpackage.jsonEntry.js'));
-  var config = {
-    baseUrl: baseUrl,
-    include: include,
-    exclude: exclude
-  };
+    var config = {
+        baseUrl: baseUrl,
+        include: include,
+        exclude: exclude
+    };
     shasum.update( JSON.stringify( config ) );
     shasum.update( mimetype );
 
@@ -608,57 +608,59 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
 
     digest = shasum.digest( 'hex' );
 
-    if ( mimetype === "application/zip" ) {
+    //if ( mimetype === "application/zip" ) {
         hash = digest;
-    } else {
-        hash += ( optimize ? ".min" : "" );
-    }
+    //} else {
+    //    hash += ( optimize ? ".min" : "" );
+   // }
 
     fs.readFile( "./data/aerogear-js-stage/lholmquist/master/gruntbase.js","utf-8", function( err, data){
-    if( err ) {
-        console.log( err );
-    }
-
-    //build replacement
-    var replacement = "[" + zcache[ "banner" ] + ", ";
-    _.each( config.include, function( val, index, list ) {
-        replacement += zcache[ "aerogearstart" ] + val + ".js" + zcache[ "aerogearend" ];
-        if( (index+1) !== list.length ) {
-            replacement += ", ";
+        if( err ) {
+            console.log( err );
         }
-    });
 
-    replacement += "]";
-    var temp = data.replace("\"@SRC@\"", replacement);
+        //build replacement
+        var replacement = "[" + zcache[ "banner" ] + ", ";
+        _.each( config.include, function( val, index, list ) {
+            replacement += zcache[ "aerogearstart" ] + val + ".js" + zcache[ "aerogearend" ];
+            if( (index+1) !== list.length ) {
+                replacement += ", ";
+            }
+        });
 
-    fs.writeFile('./data/aerogear-js-stage/lholmquist/master/' + hash + '.js',temp,'utf8',function( err ){
-        if( err ) throw err;
-        console.log("file saved");
+        replacement += "]";
+        var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'dist/<%= pkg.name %>." + hash + ".js'" );
 
-    var util  = require('util'),
-    spawn = require('child_process').spawn,
-    grunt = spawn( "grunt",["--config", hash + ".js"],{cwd:"./data/aerogear-js-stage/lholmquist/master/"} );
+        fs.writeFile('./data/aerogear-js-stage/lholmquist/master/' + hash + '.js',temp,'utf8',function( err ){
+            if( err ) throw err;
 
-    grunt.stdout.on('data', function (data) {
-  console.log('stdout: ' + data);
-});
+            var util  = require('util'),
+            spawn = require('child_process').spawn,
+            grunt = spawn( "grunt",["--config", hash + ".js"],{cwd:"./data/aerogear-js-stage/lholmquist/master/"} );
 
-grunt.stderr.on('data', function (data) {
-  console.log('stderr: ' + data);
-});
+            grunt.stdout.on('data', function (data) {
+                console.log('stdout: ' + data);
+            });
 
-grunt.on('exit', function (code) {
-  console.log('child process exited with code ' + code);
-  fs.unlink("./data/aerogear-js-stage/lholmquist/master/"+hash+".js", function( err ){
-    if ( err ) throw err;
-    console.log( 'file deleted' );
-  });
-});
+            grunt.stderr.on('data', function (data) {
+                console.log('stderr: ' + data);
+            });
 
-    });
+            grunt.on('exit', function (code) {
+                res.send( fs.readFileSync("./data/aerogear-js-stage/lholmquist/master/dist/aerogear."+hash+".js" ) );
+                console.log('child process exited with code ' + code);
+                fs.unlink("./data/aerogear-js-stage/lholmquist/master/"+hash+".js", function( err ){
+                    if ( err ) throw err;
+                    console.log( 'file deleted' );
+                });
+                fs.unlink("./data/aerogear-js-stage/lholmquist/master/dist/aerogear."+hash+".js", function( err ){
+                    if ( err ) throw err;
+                    console.log( 'file deleted' );
+                });
+            });
 
+        });
 
-    res.send("success");
     });
 });
 

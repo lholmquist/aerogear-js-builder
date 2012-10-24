@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: "@SRC@",
-                dest: 'dist/<%= pkg.name %>.js'
+                dest: "@DEST@"
             },
             pipeline: {
                 src: ['<banner:meta.banner>', '<file_strip_banner:src/aerogear.core.js>', '<file_strip_banner:src/utilities/aerogear.utilities.js>', '<file_strip_banner:src/pipeline/aerogear.pipeline.js>', '<file_strip_banner:src/pipeline/adapters/rest.js>'],
