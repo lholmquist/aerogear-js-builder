@@ -569,7 +569,7 @@ console.log( config.include );
 });
 
 app.get( '/aerogearjsbuilder/dependencies/:owner/:repo/:ref', function ( req, res ) {
-    console.log( req.url );
+    console.log( dataDir );
     var project = new Project( req.params.owner, req.params.repo, req.params.ref ),
         names = req.param( "names", "" ).split( "," ).filter( function(name) {return !!name;} ).sort(),
         exclude = req.param( "exclude", "" ).split( "," ).sort(),
@@ -602,6 +602,7 @@ app.get( "/js/*", function( req, res ) {
 //  Get the environment variables we need.
 var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP;
 var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
+var dataDir = process.env.OPENSHIFT_DATA_DIR;
 
 if (typeof ipaddr === "undefined") {
    console.warn('No OPENSHIFT_INTERNAL_IP environment variable');
