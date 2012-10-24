@@ -36,7 +36,6 @@
         "requirejs":"1.0.8",
         "rimraf":"latest",
         "semver":"latest",
-        "simple-log": "~1.0.1",
         "underscore":"latest",
         "node-native-zip":"~1.0.1"
   },
