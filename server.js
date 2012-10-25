@@ -20,6 +20,7 @@ var _ = require( 'underscore' ),
     zip = require("node-native-zip" );
 
 var dataDir = process.env.OPENSHIFT_DATA_DIR || "/Users/lholmquist/develop/projects/";
+var appRoot = process.env.OPENSHIFT_APP_DIR  || "/Users/lholmquist/develop/projects/aerogearjsbuilder/";
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:aerogear-js/", 'aerogearend':">'"};
@@ -635,10 +636,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                 console.log( "oh snap" + err);
                 throw err;
             }
+            console.log(appRoot);
             var util  = require('util'),
             spawn = require('child_process').spawn,
-            grunt = spawn( "grunt",["--config", hash + ".js"],{cwd:"./data/aerogear-js-stage/lholmquist/master/"} );
-
+            grunt = spawn( "./node_modules/grunt/bin/grunt",["--base","./data/aerogear-js-stage/lholmquist/master/", "--config", "./data/aerogear-js-stage/lholmquist/master/"+hash+".js" ]);
+//"--config", hash + ".js"
             grunt.stdout.on('data', function (data) {
                 console.log('stdout: ' + data);
             });
@@ -648,16 +650,17 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             });
 
             grunt.on('exit', function (code) {
+                //res.send("success");
                 res.send( fs.readFileSync("./data/aerogear-js-stage/lholmquist/master/dist/aerogear."+hash+".js" ) );
                 console.log('child process exited with code ' + code);
-                /*fs.unlink("./data/aerogear-js-stage/lholmquist/master/"+hash+".js", function( err ){
+                fs.unlink("./data/aerogear-js-stage/lholmquist/master/"+hash+".js", function( err ){
                     if ( err ) throw err;
                     console.log( 'file deleted' );
                 });
                 fs.unlink("./data/aerogear-js-stage/lholmquist/master/dist/aerogear."+hash+".js", function( err ){
                     if ( err ) throw err;
                     console.log( 'file deleted' );
-                });*/
+                });
             });
 
         });
