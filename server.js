@@ -672,6 +672,7 @@ app.get('/', function(req, res){
     res.send( zcache[ "builder.html" ], { "Content-Type": "text/html" } );
 });
 
+//TODO: probably a better way of doing this
 app.get( "/css/*", function( req, res ) {
     res.send( fs.readFileSync("." + req.path ), { "Content-Type": "text/css" } );
 });
