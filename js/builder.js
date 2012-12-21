@@ -20,18 +20,19 @@ $( function( $ ) {
 			return res;
 		},
 		module2domId = function( module ) {
-			return module.replace( /\./g, '-' )
+			return module.replace( /\./g, '_' )
 				.replace( /^(.)/, function( c ) { return c.toLowerCase(); } )
 				.replace( /\//g, '-slash-' );
 		},
 		domId2module = function( domId ) {
-			return domId.replace( /-slash-/g, '/' );
+			return domId.replace( /-slash-/g, '/' )
+				.replace( /\_/g, '.' );
 		},
 		group2domId = function( group ) {
-			return group.replace( / /g, '-' ).replace( /^(.)/, function( c ) { return c.toLowerCase(); } );
+			return group.replace( / /g, '_' ).replace( /^(.)/, function( c ) { return c.toLowerCase(); } );
 		},
 		strip = function( file ) {
-			return file.replace( /^\.\//g, '' ).replace( /\./g, '-' );
+			return file.replace( /^\.\//g, '' ).replace( /\./g, '_' );
 		},
 		buildForm = function( data ) {
 			var $form = $( "#builder" ).empty(),
