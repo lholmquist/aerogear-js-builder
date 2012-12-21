@@ -26,65 +26,17 @@ module.exports = function(grunt) {
             dist: {
                 src: "@SRC@",
                 dest: "@DEST@"
-            },
-            pipeline: {
-                src: ['<banner:meta.banner>', '<file_strip_banner:src/aerogear.core.js>', '<file_strip_banner:src/utilities/aerogear.utilities.js>', '<file_strip_banner:src/pipeline/aerogear.pipeline.js>', '<file_strip_banner:src/pipeline/adapters/rest.js>'],
-                dest: 'dist/<%= pkg.name %>.custom.js'
-            },
-            dataManager: {
-                src: ['<banner:meta.banner>', '<file_strip_banner:src/aerogear.core.js>', '<file_strip_banner:src/utilities/aerogear.utilities.js>', '<file_strip_banner:src/data-manager/aerogear.datamanager.js>', '<file_strip_banner:src/data-manager/adapters/memory.js>'],
-                dest: 'dist/<%= pkg.name %>.custom.js'
-            },
-            auth: {
-                src: ['<banner:meta.banner>', '<file_strip_banner:src/aerogear.core.js>', '<file_strip_banner:src/utilities/aerogear.utilities.js>', '<file_strip_banner:src/authentication/aerogear.auth.js>', '<file_strip_banner:src/authentication/adapters/rest.js>'],
-                dest: 'dist/<%= pkg.name %>.custom.js'
             }
         },
         min: {
             dist: {
                 src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
                 dest: 'dist/<%= pkg.name %>.min.js'
-            },
-            custom: {
-                src: ['<banner:meta.banner>', 'dist/<%= pkg.name %>.custom.js'],
-                dest: 'dist/<%= pkg.name %>.custom.min.js'
             }
-        },
-        qunit: {
-            files: ['tests/unit/authentication/**/*.html','tests/unit/data-manager/**/*.html', 'tests/unit/pipeline/**/*.html']
-        },
-        lint: {
-            files: ['grunt.js', 'src/**/*.js']
-        },
-        watch: {
-            files: '<config:lint.files>',
-            tasks: 'lint qunit'
-        },
-        jshint: {
-            options: {
-                curly: true,
-                eqeqeq: true,
-                latedef: true,
-                newcap: true,
-                noarg: true,
-                sub: true,
-                undef: true,
-                boss: true,
-                eqnull: true,
-                browser: true
-            },
-            globals: {
-                jQuery: true,
-                AeroGear: true
-            }
-        },
-        uglify: {}
+        }
     });
 
     // Default task.
-    grunt.registerTask('default', 'lint qunit concat:dist min:dist');
-    //grunt.registerTask('pipeline', 'lint qunit concat:pipeline min:custom');
-    //grunt.registerTask('data-manager', 'lint qunit concat:dataManager min:custom');
-    //grunt.registerTask('auth', 'lint qunit concat:auth min:custom');
+    grunt.registerTask('default', 'concat:dist min:dist');
 
 };

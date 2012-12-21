@@ -62,7 +62,8 @@
     },
     "pipeline/adapters/rest": {
     	"deps": [
-            "pipeline/aerogear.pipeline"
+            "pipeline/aerogear.pipeline",
+            "utilities/aerogear.utilities"
     	],
     	"description": "Pipeline Rest Adapter",
         "label": "Rest",
