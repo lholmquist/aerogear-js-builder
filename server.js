@@ -20,9 +20,7 @@ var _ = require( 'underscore' ),
     zip = require("node-native-zip" ),
     rimraf = require( "rimraf" );
 
-var appRoot = process.env.OPENSHIFT_APP_DIR  || "/Users/lholmquist/develop/projects/aerogearjsbuilder/";
 var dataDir = "./data/aerogear-js-stage/lholmquist/master/";
-
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:aerogear-js/", 'aerogearend':">'"};
@@ -373,7 +371,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             });
 
             replacement += "]";
-            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + directoryDate + "/<%= pkg.name %>." + hash + ".js'" );
+            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + directoryDate + "/<%= pkg.name %>." + hash + ".js'" ).replace( "\"@DESTMIN@\"", "'" + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" );
             //write a new temp grunt file
             fs.writeFile( dataDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
