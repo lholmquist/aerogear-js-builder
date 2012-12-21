@@ -20,7 +20,7 @@ var _ = require( 'underscore' ),
     zip = require("node-native-zip" ),
     rimraf = require( "rimraf" );
 
-var dataDir = process.env.OPENSHIFT_DATA_DIR || "/Users/lholmquist/develop/projects/";
+var dataDir = process.env.OPENSHIFT_DATA_DIR || "/Users/lholmquist/develop/projects/aerogearjsbuilder/data/aerogear-js-stage/lholmquist/master/";
 var appRoot = process.env.OPENSHIFT_APP_DIR  || "/Users/lholmquist/develop/projects/aerogearjsbuilder/";
 
 //  Local cache for static content [fixed and loaded at startup]
@@ -345,21 +345,22 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
     //} else {
     //    hash += ( optimize ? ".min" : "" );
    // }
-//TODO: create temp directory for based on Date.now()
 
     var directoryDate = Date.now();
-    fs.mkdir( "./data/aerogear-js-stage/lholmquist/master/" + directoryDate + "/", 0755, function( err ) {
+    fs.mkdir( dataDir + directoryDate + "/", 0755, function( err ) {
         if( err ) {
             console.log( err );
+            errorReponse( res );
             throw err;
         }
 
         console.log( "dir created" );
 
         //Begin ReadFile
-        fs.readFile( "./data/aerogear-js-stage/lholmquist/master/gruntbase.js","utf-8", function( err, data) {
+        fs.readFile( dataDir + "gruntbase.js","utf-8", function( err, data) {
             if( err ) {
                 console.log( "gruntbase"+err );
+                errorReponse( res );
             }
             //build replacement
             var replacement = "[" + zcache[ "banner" ] + ", ";
@@ -373,16 +374,17 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             replacement += "]";
             var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + directoryDate + "/<%= pkg.name %>." + hash + ".js'" );
             //write a new temp grunt file
-            fs.writeFile( "./data/aerogear-js-stage/lholmquist/master/" + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
+            fs.writeFile( dataDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
                 if( err ) {
                     console.log( "oh snap" + err);
+                    errorReponse( res );
                     throw err;
                 }
 
                 var util  = require('util'),
                 spawn = require('child_process').spawn,
-                grunt = spawn( "./node_modules/grunt/bin/grunt",["--base",dataDir + "/aerogear-js-stage/lholmquist/master/", "--config", "./data/aerogear-js-stage/lholmquist/master/"+ directoryDate + "/" + hash + ".js" ]);
+                grunt = spawn( "./node_modules/grunt/bin/grunt",["--base", dataDir, "--config", dataDir + directoryDate + "/" + hash + ".js" ]);
                 //base should be where the files are, config is the grunt.js file
                 grunt.stdout.on('data', function (data) {
                     console.log('stdout: ' + data);
@@ -394,11 +396,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
 
                 grunt.on('exit', function (code) {
                     //res.send("success");
-                    res.send( fs.readFileSync(dataDir + "/aerogear-js-stage/lholmquist/master/" + directoryDate + "/aerogear." + hash + ".js" ) );
+                    res.send( fs.readFileSync( dataDir + directoryDate + "/aerogear." + hash + ".js" ) );
                     console.log('child process exited with code ' + code);
                     //remove temp grunt file
 
-                    rimraf( "./data/aerogear-js-stage/lholmquist/master/" + directoryDate + "/", function( err ) {
+                    rimraf( dataDir + directoryDate + "/", function( err ) {
                         if( err ) {
                             console.log( err );
                         }
@@ -408,6 +410,12 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
         });
 //End ReadFIle
     });
+
+
+    function errorReponse( res ) {
+        res.status( 500 );
+        res.send( "error" );
+    }
 
 });
 
