@@ -1,7 +1,3 @@
-    //>>description: AeroGear Authentication Rest Adapter
-    //>>label: Rest
-    //>>group: Authentication
-    //>>deps: authentication/aerogear.auth
 (function( AeroGear, $, undefined ) {
     /**
         The REST adapter is the default type used when creating a new authentication module. It uses jQuery.ajax to communicate with the server.
@@ -136,6 +132,12 @@
         @param {Function} [options.error] - callback to be executed if the AJAX request results in an error
         @param {Function} [options.success] - callback to be executed if the AJAX request results in success
         @returns {Object} The jqXHR created by jQuery.ajax
+        @example
+        var auth = AeroGear.Auth( "userAuth" ).modules[ 0 ],
+            data = { userName: "user", password: "abc123", name: "John" };
+
+        // Enroll a new user
+        auth.enroll( data );
      */
     AeroGear.Auth.adapters.Rest.prototype.enroll = function( data, options ) {
         options = options || {};
@@ -192,7 +194,7 @@
         if ( endpoints.enroll ) {
             url += endpoints.enroll;
         } else {
-            url += "auth/register";
+            url += "auth/enroll";
         }
         if ( url.length ) {
             extraOptions.url = url;
@@ -211,6 +213,12 @@
         @param {Function} [options.error] - callback to be executed if the AJAX request results in an error
         @param {String} [options.success] - callback to be executed if the AJAX request results in success
         @returns {Object} The jqXHR created by jQuery.ajax
+        @example
+        var auth = AeroGear.Auth( "userAuth" ).modules[ 0 ],
+            data = { userName: "user", password: "abc123" };
+
+        // Enroll a new user
+        auth.login( data );
      */
     AeroGear.Auth.adapters.Rest.prototype.login = function( data, options ) {
         options = options || {};
@@ -283,6 +291,11 @@
         @param {Function} [options.error] - callback to be executed if the AJAX request results in an error
         @param {String} [options.success] - callback to be executed if the AJAX request results in success
         @returns {Object} The jqXHR created by jQuery.ajax
+        @example
+        var auth = AeroGear.Auth( "userAuth" ).modules[ 0 ];
+
+        // Enroll a new user
+        auth.logout();
      */
     AeroGear.Auth.adapters.Rest.prototype.logout = function( options ) {
         options = options || {};

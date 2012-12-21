@@ -1,6 +1,5 @@
 $( function( $ ) {
-	var host = "/aerogearjsbuilder/dependencies/lholmquist/aerogear-js/master",
-        //host = "js/aerogear.json",
+	var host = "js/aerogear.json",
 		dependencyMap,
 		builderhtml = [],
 		sortable = [],

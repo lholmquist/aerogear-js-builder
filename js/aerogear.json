@@ -1,11 +1,9 @@
 {
-	"utilities/aerogear.utilities": {
-        "deps": [
-            "aerogear.core"
-        ],
-        "description": "Aerogear Utilities",
-        "label": "Utilities",
-        "group": "Utilities"
+    "aerogear.core":{
+        "deps": [],
+        "description": "Base file for AeroGear.js",
+        "label": "Core",
+        "group": "Core"
     },
     "authentication/aerogear.auth": {
         "deps": [
@@ -15,83 +13,60 @@
         "label": "Authentication",
         "group": "Authentication"
     },
-    "datamanager/aerogear.datamanager": {
-    	"deps": [
-            "aerogear.core"
-    	],
-    	"description": "Base Data Manager file",
-        "label": "Data Manager",
-        "group": "DataManager"
-    },
-    "pipeline/aerogear.pipeline": {
-    	"deps": [
-            "aerogear.core"
-    	],
-    	"description": "Base Pipeline File",
-        "label": "Pipeline",
-        "group": "Pipeline"
-    },
-    "aerogear.core":{
-    	"deps": [],
-    	"description": "Base file for AeroGear.js",
-        "label": "Core",
-        "group": "Core"
-    },
     "authentication/adapters/rest": {
-    	"deps": [
+        "deps": [
             "authentication/aerogear.auth"
-    	],
-    	"description": "Rest Authentication Adapter",
+        ],
+        "description": "Rest Authentication Adapter",
         "label": "Rest",
         "group": "Authentication"
     },
-    "authentication/adapters/oauth": {
+    "data-manager/aerogear.datamanager": {
         "deps": [
-            "authentication/aerogear.auth"
+            "aerogear.core"
         ],
-        "description": "OAuth Authentication Adapter",
-        "label": "OAuth",
-        "group": "Authentication"
+        "description": "Base Data Manager file",
+        "label": "Data Manager",
+        "group": "DataManager"
     },
-    "authentication/adapters/ninja": {
-        "deps": [
-            "authentication/aerogear.auth"
-        ],
-        "description": "Ninja's Authentication Adapter(super sneaky)",
-        "label": "Ninja's",
-        "group": "Authentication"
-    },
-    "datamanager/adapters/memory": {
+    "data-manager/adapters/memory": {
     	"deps": [
-            "datamanager/aerogear.datamanager"
+            "data-manager/aerogear.datamanager"
     	],
     	"description": "Memory Data Manager Adapter",
         "label": "Memory",
         "group": "DataManager"
     },
-    "datamanager/adapters/webstorage": {
+    "datamanager/adapters/session-local": {
         "deps": [
-            "datamanager/aerogear.datamanager"
+            "data-manager/adapters/memory"
         ],
-        "description": "Web Storage Data Manager Adapter",
+        "description": "Local/Session Storage Data Manager Adapter",
         "label": "Web Storage",
         "group": "DataManager"
     },
+    "pipeline/aerogear.pipeline": {
+        "deps": [
+            "aerogear.core"
+        ],
+        "description": "Base Pipeline File",
+        "label": "Pipeline",
+        "group": "Pipeline"
+    },
     "pipeline/adapters/rest": {
     	"deps": [
-            "pipeline/aerogear.pipeline",
-            "utilities/aerogear.utilities"
+            "pipeline/aerogear.pipeline"
     	],
     	"description": "Pipeline Rest Adapter",
         "label": "Rest",
         "group": "Pipeline"
     },
-    "pipeline/adapters/websocket": {
+    "utilities/aerogear.utilities": {
         "deps": [
-            "pipeline/aerogear.pipeline"
+            "aerogear.core"
         ],
-        "description": "Pipeline Websocket Adapter",
-        "label": "Websocket",
-        "group": "Pipeline"
+        "description": "Aerogear Utilities",
+        "label": "Utilities",
+        "group": "Utilities"
     }
 }

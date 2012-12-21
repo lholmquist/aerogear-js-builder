@@ -1,7 +1,4 @@
 /**
-    //>>description: Base file for AeroGear.js
-    //>>label: Core
-    //>>group: Core
     The AeroGear namespace provides a way to encapsulate the library's properties and methods away from the global namespace
     @namespace
  */

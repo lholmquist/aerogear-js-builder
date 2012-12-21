@@ -1,7 +1,3 @@
-    //>>description: Utility class for AeroGear.Pipeline
-    //>>label: AeroGear Utilities
-    //>>group: Utilities
-    //>>deps: aerogear.core
 (function( AeroGear, $, undefined ) {
     /**
         Wrapper utility around jQuery.ajax to preform some custom actions

@@ -1,7 +1,3 @@
-    //>>description: Base Pipeline Class
-    //>>label: AeroGear Data Manager
-    //>>group: Data Manager
-    //>>deps: aerogear.core
 (function( AeroGear, $, undefined ) {
     /**
         A collection of data connections (stores) and their corresponding data models. This object provides a standard way to interact with client side data no matter the data format or storage mechanism used.

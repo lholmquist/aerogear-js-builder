@@ -1,7 +1,3 @@
-    //>>description: Base Pipeline Class
-    //>>label: AeroGear Pipeline
-    //>>group: Pipeline
-    //>>deps: aerogear.core
 (function( AeroGear, $, undefined ) {
     /**
         The AeroGear.Pipeline provides a persistence API that is protocol agnostic and does not depend on any certain data model. Through the use of adapters, this library provides common methods like read, save and delete that will just work.

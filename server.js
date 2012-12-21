@@ -683,7 +683,7 @@ app.get( "/js/*", function( req, res ) {
 
 
 //  Get the environment variables we need.
-var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP;
+var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP || "localhost";
 var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 
 if (typeof ipaddr === "undefined") {

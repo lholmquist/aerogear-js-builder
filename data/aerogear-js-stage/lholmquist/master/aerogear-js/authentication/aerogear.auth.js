@@ -1,7 +1,3 @@
-    //>>description: AeroGear Authentication Base Class
-    //>>label: AeroGear Authentication
-    //>>group: Authentication
-    //>>deps: aerogear.core
 (function( AeroGear, $, undefined ) {
     /**
         The AeroGear.Auth namespace provides an authentication and enrollment API. Through the use of adapters, this library provides common methods like enroll, login and logout that will just work.
