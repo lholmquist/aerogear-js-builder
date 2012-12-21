@@ -17,7 +17,8 @@ var _ = require( 'underscore' ),
     requirejs = require( 'requirejs' ),
     semver = require( 'semver' ),
     url = require( 'url' ),
-    zip = require("node-native-zip" );
+    zip = require("node-native-zip" ),
+    rimraf = require( "rimraf" );
 
 var dataDir = process.env.OPENSHIFT_DATA_DIR || "/Users/lholmquist/develop/projects/";
 var appRoot = process.env.OPENSHIFT_APP_DIR  || "/Users/lholmquist/develop/projects/aerogearjsbuilder/";
@@ -344,10 +345,19 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
     //} else {
     //    hash += ( optimize ? ".min" : "" );
    // }
-    if( fs.existsSync( "./data/aerogear-js-stage/lholmquist/master/" + hash + ".js" ) ) {
-        doGrunt( hash, res );
-    } else {
-        fs.readFile( "./data/aerogear-js-stage/lholmquist/master/gruntbase.js","utf-8", function( err, data ) {
+//TODO: create temp directory for based on Date.now()
+
+    var directoryDate = Date.now();
+    fs.mkdir( "./data/aerogear-js-stage/lholmquist/master/" + directoryDate + "/", 0755, function( err ) {
+        if( err ) {
+            console.log( err );
+            throw err;
+        }
+
+        console.log( "dir created" );
+
+        //Begin ReadFile
+        fs.readFile( "./data/aerogear-js-stage/lholmquist/master/gruntbase.js","utf-8", function( err, data) {
             if( err ) {
                 console.log( "gruntbase"+err );
             }
@@ -361,50 +371,44 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             });
 
             replacement += "]";
-            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'dist/<%= pkg.name %>." + hash + ".js'" );
+            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + directoryDate + "/<%= pkg.name %>." + hash + ".js'" );
             //write a new temp grunt file
-            fs.writeFile( './data/aerogear-js-stage/lholmquist/master/' + hash + '.js', temp, 'utf8', function( err ) {
+            fs.writeFile( "./data/aerogear-js-stage/lholmquist/master/" + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
                 if( err ) {
                     console.log( "oh snap" + err);
                     throw err;
                 }
 
-                doGrunt( hash, res );
+                var util  = require('util'),
+                spawn = require('child_process').spawn,
+                grunt = spawn( "./node_modules/grunt/bin/grunt",["--base",dataDir + "/aerogear-js-stage/lholmquist/master/", "--config", "./data/aerogear-js-stage/lholmquist/master/"+ directoryDate + "/" + hash + ".js" ]);
+                //base should be where the files are, config is the grunt.js file
+                grunt.stdout.on('data', function (data) {
+                    console.log('stdout: ' + data);
+                });
 
-            });
+                grunt.stderr.on('data', function (data) {
+                    console.log('stderr: ' + data);
+                });
 
-        });
-    }
-    function doGrunt( hash, res ) {
-        var util  = require('util'),
-            spawn = require('child_process').spawn,
-            grunt = spawn( "./node_modules/grunt/bin/grunt",["--base",dataDir + "/aerogear-js-stage/lholmquist/master/", "--config", "./data/aerogear-js-stage/lholmquist/master/"+hash+".js" ]);
-            //base should be where the files are, config is the grunt.js file
+                grunt.on('exit', function (code) {
+                    //res.send("success");
+                    res.send( fs.readFileSync(dataDir + "/aerogear-js-stage/lholmquist/master/" + directoryDate + "/aerogear." + hash + ".js" ) );
+                    console.log('child process exited with code ' + code);
+                    //remove temp grunt file
 
-            /*grunt.stdout.on('data', function (data) {
-                console.log('stdout: ' + data);
-            });
-
-            grunt.stderr.on('data', function (data) {
-                console.log('stderr: ' + data);
-            });*/
-
-            grunt.on('exit', function (code) {
-                res.send( fs.readFileSync(dataDir+"/aerogear-js-stage/lholmquist/master/dist/aerogear."+hash+".js" ) );
-                console.log('child process exited with code ' + code);
-                //remove temp grunt file
-                /*fs.unlink("./data/aerogear-js-stage/lholmquist/master/"+hash+".js", function( err ){
-                    if ( err ) throw err;
-                    console.log( 'file deleted' );
-                });*/
-                //remove custom file
-                fs.unlink(dataDir+"/aerogear-js-stage/lholmquist/master/dist/aerogear."+hash+".js", function( err ){
-                    if ( err ) throw err;
-                    //console.log( 'file deleted' );
+                    rimraf( "./data/aerogear-js-stage/lholmquist/master/" + directoryDate + "/", function( err ) {
+                        if( err ) {
+                            console.log( err );
+                        }
+                    });
                 });
             });
-    }
+        });
+//End ReadFIle
+    });
+
 });
 
 // Handler for GET /
