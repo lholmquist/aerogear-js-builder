@@ -3,7 +3,8 @@
         "deps": [],
         "description": "Base file for AeroGear.js",
         "label": "Core",
-        "group": "Core"
+        "group": "Core",
+        "groupLabel" : "Core"
     },
     "authentication/aerogear.auth": {
         "deps": [
@@ -11,7 +12,8 @@
         ],
         "description": "Base Authentication file",
         "label": "Authentication",
-        "group": "Authentication"
+        "group": "Authentication",
+        "groupLabel" : "Authentication"
     },
     "authentication/adapters/rest": {
         "deps": [
@@ -19,7 +21,8 @@
         ],
         "description": "Rest Authentication Adapter",
         "label": "Rest",
-        "group": "Authentication"
+        "group": "Authentication",
+        "groupLabel" : "Authentication"
     },
     "data-manager/aerogear.datamanager": {
         "deps": [
@@ -27,7 +30,8 @@
         ],
         "description": "Base Data Manager file",
         "label": "Data Manager",
-        "group": "DataManager"
+        "group": "data-manager",
+        "groupLabel" : "Data Manager"
     },
     "data-manager/adapters/memory": {
     	"deps": [
@@ -35,15 +39,17 @@
     	],
     	"description": "Memory Data Manager Adapter",
         "label": "Memory",
-        "group": "DataManager"
+        "group": "data-manager",
+        "groupLabel" : "Data Manager"
     },
-    "datamanager/adapters/session-local": {
+    "data-manager/adapters/session-local": {
         "deps": [
             "data-manager/adapters/memory"
         ],
         "description": "Local/Session Storage Data Manager Adapter",
         "label": "Web Storage",
-        "group": "DataManager"
+        "group": "data-manager",
+        "groupLabel" : "Data Manager"
     },
     "pipeline/aerogear.pipeline": {
         "deps": [
@@ -51,7 +57,8 @@
         ],
         "description": "Base Pipeline File",
         "label": "Pipeline",
-        "group": "Pipeline"
+        "group": "pipeline",
+        "groupLabel" : "Pipeline"
     },
     "pipeline/adapters/rest": {
     	"deps": [
@@ -59,7 +66,8 @@
     	],
     	"description": "Pipeline Rest Adapter",
         "label": "Rest",
-        "group": "Pipeline"
+        "group": "pipeline",
+        "groupLabel" : "Pipeline"
     },
     "utilities/aerogear.utilities": {
         "deps": [
@@ -67,6 +75,7 @@
         ],
         "description": "Aerogear Utilities",
         "label": "Utilities",
-        "group": "Utilities"
+        "group": "Utilities",
+        "groupLabel" : "Utilities"
     }
 }

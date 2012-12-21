@@ -25,8 +25,7 @@ $( function( $ ) {
 				.replace( /\//g, '-slash-' );
 		},
 		domId2module = function( domId ) {
-			return domId.replace( /-slash-/g, '/' )
-				.replace( /\-/g, '.' );
+			return domId.replace( /-slash-/g, '/' );
 		},
 		group2domId = function( group ) {
 			return group.replace( / /g, '-' ).replace( /^(.)/, function( c ) { return c.toLowerCase(); } );
