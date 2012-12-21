@@ -395,7 +395,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
 
                 grunt.on('exit', function (code) {
                     //res.send("success");
-                    res.send( fs.readFileSync( dataDir + directoryDate + "/aerogear." + hash + ".js" ) );
+                    res.send( fs.readFileSync( dataDir + directoryDate + "/aerogear." + hash + ".min.js" ) );
                     console.log('child process exited with code ' + code);
                     //remove temp grunt file
 
