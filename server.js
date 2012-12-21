@@ -21,7 +21,7 @@ var _ = require( 'underscore' ),
     rimraf = require( "rimraf" );
 
 var appRoot = process.env.OPENSHIFT_APP_DIR  || "/Users/lholmquist/develop/projects/aerogearjsbuilder/";
-var dataDir = appRoot + "data/aerogear-js-stage/lholmquist/master/";
+var dataDir = "./data/aerogear-js-stage/lholmquist/master/";
 
 
 //  Local cache for static content [fixed and loaded at startup]
