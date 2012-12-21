@@ -20,8 +20,9 @@ var _ = require( 'underscore' ),
     zip = require("node-native-zip" ),
     rimraf = require( "rimraf" );
 
-var dataDir = process.env.OPENSHIFT_DATA_DIR || "/Users/lholmquist/develop/projects/aerogearjsbuilder/data/aerogear-js-stage/lholmquist/master/";
 var appRoot = process.env.OPENSHIFT_APP_DIR  || "/Users/lholmquist/develop/projects/aerogearjsbuilder/";
+var dataDir = appRoot + "data/aerogear-js-stage/lholmquist/master/";
+
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:aerogear-js/", 'aerogearend':">'"};
