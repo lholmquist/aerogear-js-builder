@@ -11,10 +11,10 @@ var _ = require( 'underscore' ),
     zip = require("node-native-zip" ),
     rimraf = require( "rimraf" );
 
-var dataDir = "./data/aerogear-js-stage/lholmquist/master/";
+var dataDir = "./data/aerogear-js-stage/aerogear/master/";
 
 //  Local cache for static content [fixed and loaded at startup]
-var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:aerogear-js/", 'aerogearend':">'"};
+var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:src/", 'aerogearend':">'"};
 zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
 zcache['builder.html'] = fs.readFileSync( "./builder.html" );
 
