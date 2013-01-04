@@ -394,15 +394,30 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                 });
 
                 grunt.on('exit', function (code) {
-                    //res.send("success");
-                    res.send( fs.readFileSync( dataDir + directoryDate + "/aerogear." + hash + ".min.js" ) );
-                    console.log('child process exited with code ' + code);
-                    //remove temp grunt file
 
-                    rimraf( dataDir + directoryDate + "/", function( err ) {
+                    //Files are created, time to zip them up
+                    var archive = new zip(),
+                        tempDir = dataDir + directoryDate + "/aerogear." + hash;
+                    archive.addFiles([
+                        { name: "aerogear." + hash + ".min.js", path: dataDir + directoryDate + "/aerogear." + hash + ".min.js" },
+                        { name: "aerogear." + hash + ".js", path: dataDir + directoryDate + "/aerogear." + hash + ".js" }
+                    ], function( err ) {
                         if( err ) {
                             console.log( err );
+                            errorResponse( res );
                         }
+                        var buff = archive.toBuffer();
+
+                        res.send( buff );
+                        //res.send( fs.readFileSync( dataDir + directoryDate + "/aerogear." + hash + ".min.js" ) );
+                        console.log('child process exited with code ' + code);
+                        //remove temp grunt file
+
+                        rimraf( dataDir + directoryDate + "/", function( err ) {
+                            if( err ) {
+                                console.log( err );
+                            }
+                        });
                     });
                 });
             });
