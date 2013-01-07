@@ -12,7 +12,7 @@ var _ = require( 'underscore' ),
     rimraf = require( "rimraf" );
 
 var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + "aeorgear-js/" : "../aerogear-js/";
-var tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/aerogear-js" : "../aerogearjsbuilder/data/";
+var tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/aerogear-js/" : "../aerogearjsbuilder/data/";
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = {
