@@ -14,9 +14,15 @@ var _ = require( 'underscore' ),
 var dataDir = "./data/aerogear-js-stage/aerogear/master/";
 
 //  Local cache for static content [fixed and loaded at startup]
-var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:", 'aerogearend':">'"};
-zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
-zcache['builder.html'] = fs.readFileSync( "./builder.html" );
+var zcache = {
+    'index.html': '',
+    'builder.html': '',
+    'banner': "'<banner:meta.banner>'",
+    'aerogearstart': "'<file_strip_banner:",
+    'aerogearend':">'"
+};
+zcache[ 'index.html' ] = fs.readFileSync( './index.html' ); //  Cache index.html
+zcache[ 'builder.html' ] = fs.readFileSync( "./builder.html" );
 
 app.use(express.bodyParser());
 
@@ -50,9 +56,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
     shasum.update( JSON.stringify( config ) );
     shasum.update( mimetype );
 
-    digest = shasum.digest( 'hex' );
-
-    hash = digest;
+    hash = shasum.digest( 'hex' );
 
     var directoryDate = Date.now();
     fs.mkdir( dataDir + directoryDate + "/", 0755, function( err ) {
@@ -61,7 +65,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             throw err;
         }
         //Begin ReadFile
-        fs.readFile( dataDir + "gruntbase.js","utf-8", function( err, data) {
+        fs.readFile( "gruntbase.js","utf-8", function( err, data) {
             if( err ) {
                 errorResponse( res, err );
             }
@@ -149,6 +153,8 @@ app.get( "/js/*", function( req, res ) {
     res.send( fs.readFileSync("." + req.path ), { "Content-Type": "text/javascript" } );
 });
 
+
+//OPENSHIFT Stuff
 
 //  Get the environment variables we need.
 var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP || "localhost";
