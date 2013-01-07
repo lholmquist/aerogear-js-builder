@@ -14,7 +14,7 @@ var _ = require( 'underscore' ),
 var dataDir = "./data/aerogear-js-stage/aerogear/master/";
 
 //  Local cache for static content [fixed and loaded at startup]
-var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:src/", 'aerogearend':">'"};
+var zcache = { 'index.html': '','builder.html':'', 'banner':"'<banner:meta.banner>'",'aerogearstart':"'<file_strip_banner:", 'aerogearend':">'"};
 zcache['index.html'] = fs.readFileSync('./index.html'); //  Cache index.html
 zcache['builder.html'] = fs.readFileSync( "./builder.html" );
 
@@ -32,6 +32,7 @@ var app  = express.createServer();
 app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
     var include = req.param( "include", "main" ).split( "," ).sort(),
         exclude = req.param( "exclude", "" ).split( "," ).sort(),
+        external = req.param( "external", "" ).split( "," ).sort(),
         optimize = Boolean( req.param( "optimize", false ) ).valueOf(),
         name = req.params.name || ( req.params.repo + ".js" ),
         ext = (optimize !== "none" ? ".min" : "") + ( path.extname( name ) || ".js" ),
@@ -39,6 +40,9 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
         shasum = crypto.createHash( 'sha1' ),
         dstDir, dstFile, digest, hash;
 
+    if( external[0].length ) {
+        include = include.concat( external );
+    }
     var config = {
         include: include,
         exclude: exclude
@@ -53,13 +57,13 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
     var directoryDate = Date.now();
     fs.mkdir( dataDir + directoryDate + "/", 0755, function( err ) {
         if( err ) {
-            errorReponse( res, err );
+            errorResponse( res, err );
             throw err;
         }
         //Begin ReadFile
         fs.readFile( dataDir + "gruntbase.js","utf-8", function( err, data) {
             if( err ) {
-                errorReponse( res, err );
+                errorResponse( res, err );
             }
             //build replacement
             var replacement = "[" + zcache[ "banner" ] + ", ";
@@ -76,7 +80,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             fs.writeFile( dataDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
                 if( err ) {
-                    errorReponse( res, err );
+                    errorResponse( res, err );
                     throw err;
                 }
 
@@ -124,7 +128,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
     });
 
 
-    function errorReponse( res, err ) {
+    function errorResponse( res, err ) {
         res.status( 500 );
         res.send( err );
     }

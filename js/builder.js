@@ -1,6 +1,7 @@
 $( function( $ ) {
 	var host = "js/aerogear.json",
 		dependencyMap,
+        externalMap,
 		builderhtml = [],
 		sortable = [],
 		groupBy = function( data, iterator ) {
@@ -175,8 +176,6 @@ $( function( $ ) {
 		})
 		.delegate( '.sel-all', 'change', selectAll );
 
-	$( '#branch' ).change( refreshForm );
-
 	$( "#builder" ).bind( 'submit',
 		function( e ) {
 			var $el = $( this ),
@@ -192,7 +191,18 @@ $( function( $ ) {
 
 			config = {
 				baseUrl: "js",
-				include: formData.map( function() { return domId2module( $( this ).attr( 'id' ) ); } ).toArray().join( "," )
+				include: formData.map( function() {
+                    var domId = domId2module( $( this ).attr( 'id' ) );
+					return domId;
+				} ).toArray().join( "," ),
+                external: _.uniq(
+                    formData.map( function() {
+                        var domId = domId2module( $( this ).attr( "id") );
+                        if( dependencyMap[domId].external ) {
+                            return dependencyMap[domId].external.join( "," );
+                        }
+                    }).toArray()
+                ).join( "," )
 			};
 
 			$( "#download" ).html(
