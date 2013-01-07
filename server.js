@@ -11,7 +11,7 @@ var _ = require( 'underscore' ),
     zip = require("node-native-zip" ),
     rimraf = require( "rimraf" );
 
-var dataDir = "./data/aerogear-js-stage/aerogear/master/";
+var dataDir = "./data/aerogear-js/";
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = {
