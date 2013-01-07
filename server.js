@@ -11,10 +11,9 @@ var _ = require( 'underscore' ),
     zip = require("node-native-zip" ),
     rimraf = require( "rimraf" );
 
-var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + "aeorgear-js/" : "../aerogear-js/";
-var tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "/data/" : "../aerogearjsbuilder/data/";
+var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + "aerogear-js/" : "../aerogear-js/";
+var tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/" : "../aerogearjsbuilder/data/";
 
-console.log( tempSavDir );
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = {
     'index.html': '',
@@ -89,9 +88,6 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                     errorResponse( res, err );
                     throw err;
                 }
-
-                console.log( tempSaveDir + directoryDate + "/" + hash + ".js" );
-
                 var util  = require('util'),
                 spawn = require('child_process').spawn,
                 grunt = spawn( "./node_modules/grunt/bin/grunt",["--base", dataDir, "--config", tempSaveDir + directoryDate + "/" + hash + ".js" ]);
@@ -122,11 +118,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                         console.log('child process exited with code ' + code);
                         //remove temp grunt file
 
-                        /*rimraf( tempSaveDir + directoryDate + "/", function( err ) {
+                        rimraf( tempSaveDir + directoryDate + "/", function( err ) {
                             if( err ) {
                                 console.log( err );
                             }
-                        });*/
+                        });
                     });
                 });
             });
