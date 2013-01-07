@@ -119,11 +119,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                         console.log('child process exited with code ' + code);
                         //remove temp grunt file
 
-                        rimraf( tempSaveDir + directoryDate + "/", function( err ) {
+                        /*rimraf( tempSaveDir + directoryDate + "/", function( err ) {
                             if( err ) {
                                 console.log( err );
                             }
-                        });
+                        });*/
                     });
                 });
             });
