@@ -12,6 +12,7 @@ var _ = require( 'underscore' ),
     rimraf = require( "rimraf" );
 
 var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + "aeorgear-js/" : "../aerogear-js/";
+var tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/" : "../aerogearjsbuilder/data/";
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = {
@@ -59,7 +60,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
     hash = shasum.digest( 'hex' );
 
     var directoryDate = Date.now();
-    fs.mkdir( dataDir + directoryDate + "/", 0755, function( err ) {
+    fs.mkdir( tempSaveDir + directoryDate + "/", 0755, function( err ) {
         if( err ) {
             errorResponse( res, err );
             throw err;
@@ -79,9 +80,9 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             });
 
             replacement += "]";
-            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + directoryDate + "/<%= pkg.name %>." + hash + ".js'" ).replace( "\"@DESTMIN@\"", "'" + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" );
+            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".js'" ).replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" );
             //write a new temp grunt file
-            fs.writeFile( dataDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
+            fs.writeFile( tempSaveDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
                 if( err ) {
                     errorResponse( res, err );
@@ -90,7 +91,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
 
                 var util  = require('util'),
                 spawn = require('child_process').spawn,
-                grunt = spawn( "./node_modules/grunt/bin/grunt",["--base", dataDir, "--config", dataDir + directoryDate + "/" + hash + ".js" ]);
+                grunt = spawn( "./node_modules/grunt/bin/grunt",["--base", dataDir, "--config", tempSaveDir + directoryDate + "/" + hash + ".js" ]);
                 //base should be where the files are, config is the grunt.js file
                 grunt.stdout.on('data', function (data) {
                     console.log('stdout: ' + data);
@@ -103,11 +104,10 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                 grunt.on('exit', function (code) {
 
                     //Files are created, time to zip them up
-                    var archive = new zip(),
-                        tempDir = dataDir + directoryDate + "/aerogear." + hash;
+                    var archive = new zip();
                     archive.addFiles([
-                        { name: "aerogear." + hash + ".min.js", path: dataDir + directoryDate + "/aerogear." + hash + ".min.js" },
-                        { name: "aerogear." + hash + ".js", path: dataDir + directoryDate + "/aerogear." + hash + ".js" }
+                        { name: "aerogear." + hash + ".min.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".min.js" },
+                        { name: "aerogear." + hash + ".js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".js" }
                     ], function( err ) {
                         if( err ) {
                             errorResponse( res, err );
@@ -119,7 +119,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                         console.log('child process exited with code ' + code);
                         //remove temp grunt file
 
-                        rimraf( dataDir + directoryDate + "/", function( err ) {
+                        rimraf( tempSaveDir + directoryDate + "/", function( err ) {
                             if( err ) {
                                 console.log( err );
                             }
