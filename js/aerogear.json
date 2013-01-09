@@ -9,6 +9,18 @@
         "group": "Authentication",
         "groupLabel" : "Authentication"
     },
+    "src/pipeline/adapters/rest": {
+        "external": [
+            "src/aerogear.core",
+            "src/pipeline/aerogear.pipeline",
+            "src/utilities/aerogear.utilities",
+            "external/uuid/uuid"
+        ],
+        "description": "Pipeline Rest Adapter",
+        "label": "Rest",
+        "group": "pipeline",
+        "groupLabel" : "Pipeline"
+    },
     "src/data-manager/adapters/memory": {
         "external": [
             "src/aerogear.core",
@@ -33,17 +45,5 @@
         "label": "Web Storage",
         "group": "data-manager",
         "groupLabel" : "Data Manager"
-    },
-    "src/pipeline/adapters/rest": {
-        "external": [
-            "src/aerogear.core",
-            "src/pipeline/aerogear.pipeline",
-            "src/utilities/aerogear.utilities",
-            "external/uuid/uuid"
-        ],
-    	"description": "Pipeline Rest Adapter",
-        "label": "Rest",
-        "group": "pipeline",
-        "groupLabel" : "Pipeline"
     }
 }
