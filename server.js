@@ -34,7 +34,23 @@ var app  = express.createServer();
 /*  =====================================================================  */
 /*  Setup route handlers.  */
 /*  =====================================================================  */
+app.get( "/aerogearjsbuilder/deps", function( request, response ) {
+    var callback = request.query.callback || request.query.jsonp;
+        responseBody = "";
 
+    fs.readFile( "./js/aerogear.json", function( err, data ) {
+        if( err ) {
+            responseBody = "{ 'error': " + err + "}";
+        }
+        responseBody = data;
+
+        if( callback ) {
+            response.send( callback + "(" + responseBody + " ) " );
+        } else {
+            response.send( responseBody );
+        }
+    });
+});
 
 app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
     var include = req.param( "include", "main" ).split( "," ).sort(),

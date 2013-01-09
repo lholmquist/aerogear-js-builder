@@ -1,5 +1,5 @@
 $( function( $ ) {
-	var host = "js/aerogear.json",
+	var host = "http://localhost:8080/aerogearjsbuilder/deps/",//  js/aerogear.json",
 		dependencyMap,
         externalMap,
 		builderhtml = [],
@@ -147,7 +147,7 @@ $( function( $ ) {
 		},
 		refreshForm = function() {
 			var branch = $( "#branch option:selected" ).val() || "master";
-			$.getJSON( host ).done(
+			$.ajax( host,{dataType:"jsonp"} ).done(
 				function( data ) {
 					dependencyMap = data;
 					// Clean up depend attr from relative paths and plugins
@@ -204,7 +204,6 @@ $( function( $ ) {
                     }).toArray()
                 ).join( "," )
 			};
-
 			$( "#download" ).html(
 				$( "<iframe>" )
 					.attr( "src",'/aerogearjsbuilder/bundle/aerogear/src/' + branch + '/aerogear.mobile.custom.zip?' + $.param( config ) )

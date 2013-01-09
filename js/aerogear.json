@@ -1,22 +1,7 @@
 {
-    "src/aerogear.core":{
-        "deps": [],
-        "description": "Base file for AeroGear.js",
-        "label": "Core",
-        "group": "Core",
-        "groupLabel" : "Core"
-    },
-    "src/authentication/aerogear.auth": {
-        "deps": [
-            "src/aerogear.core"
-        ],
-        "description": "Base Authentication file",
-        "label": "Authentication",
-        "group": "Authentication",
-        "groupLabel" : "Authentication"
-    },
     "src/authentication/adapters/rest": {
-        "deps": [
+        "external": [
+            "src/aerogear.core",
             "src/authentication/aerogear.auth"
         ],
         "description": "Rest Authentication Adapter",
@@ -24,20 +9,10 @@
         "group": "Authentication",
         "groupLabel" : "Authentication"
     },
-    "src/data-manager/aerogear.datamanager": {
-        "deps": [
-            "src/aerogear.core"
-        ],
-        "description": "Base Data Manager file",
-        "label": "Data Manager",
-        "group": "data-manager",
-        "groupLabel" : "Data Manager"
-    },
     "src/data-manager/adapters/memory": {
-    	"deps": [
-            "src/data-manager/aerogear.datamanager"
-    	],
         "external": [
+            "src/aerogear.core",
+            "src/data-manager/aerogear.datamanager",
             "external/uuid/uuid"
         ],
     	"description": "Memory Data Manager Adapter",
@@ -50,6 +25,8 @@
             "src/data-manager/adapters/memory"
         ],
         "external": [
+            "src/aerogear.core",
+            "src/data-manager/aerogear.datamanager",
             "external/uuid/uuid"
         ],
         "description": "Local/Session Storage Data Manager Adapter",
@@ -57,35 +34,16 @@
         "group": "data-manager",
         "groupLabel" : "Data Manager"
     },
-    "src/pipeline/aerogear.pipeline": {
-        "deps": [
-            "src/aerogear.core"
-        ],
-        "description": "Base Pipeline File",
-        "label": "Pipeline",
-        "group": "pipeline",
-        "groupLabel" : "Pipeline"
-    },
     "src/pipeline/adapters/rest": {
-    	"deps": [
-            "src/pipeline/aerogear.pipeline",
-            "src/utilities/aerogear.utilities"
-    	],
         "external": [
+            "src/aerogear.core",
+            "src/pipeline/aerogear.pipeline",
+            "src/utilities/aerogear.utilities",
             "external/uuid/uuid"
         ],
     	"description": "Pipeline Rest Adapter",
         "label": "Rest",
         "group": "pipeline",
         "groupLabel" : "Pipeline"
-    },
-    "src/utilities/aerogear.utilities": {
-        "deps": [
-            "src/aerogear.core"
-        ],
-        "description": "Aerogear Utilities",
-        "label": "Utilities",
-        "group": "Utilities",
-        "groupLabel" : "Utilities"
     }
 }
