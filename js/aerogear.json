@@ -1,4 +1,8 @@
 {
+    "version": {
+        "group": "exclude",
+        "version": "1.0.0.M7"
+    },
     "src/authentication/adapters/rest": {
         "external": [
             "src/aerogear.core",

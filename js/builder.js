@@ -2,6 +2,7 @@ $( function( $ ) {
 	var host = "http://localhost:8080/aerogearjsbuilder/deps/",//  js/aerogear.json",
 		dependencyMap,
         externalMap,
+        version,
 		builderhtml = [],
 		sortable = [],
 		groupBy = function( data, iterator ) {
@@ -153,6 +154,9 @@ $( function( $ ) {
 					// Clean up depend attr from relative paths and plugins
 					_.each( dependencyMap, function( value, key, map ) {
 						if ( value.group && value.group === "exclude" ) {
+							if( value.version ) {
+								version = value.version;
+							}
 							delete map[ key ];
 						} else if ( value.deps ) {
 							_.each( value.deps, function( v, k, m ) {
