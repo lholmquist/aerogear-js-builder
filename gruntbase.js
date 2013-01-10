@@ -56,8 +56,8 @@ module.exports = function(grunt) {
     });
 
     // grunt-contrib tasks
-    grunt.task.loadTasks('../aerogearjsbuilder/node_modules/grunt-contrib-concat/tasks');
-    grunt.task.loadTasks('../aerogearjsbuilder/node_modules/grunt-contrib-uglify/tasks');
+    grunt.task.loadTasks('../repo/node_modules/grunt-contrib-concat/tasks');
+    grunt.task.loadTasks('../repo/node_modules/grunt-contrib-uglify/tasks');
     // Default task.
     grunt.registerTask('default', ['concat:dist','uglify:all']);
 
