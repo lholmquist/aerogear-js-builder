@@ -13,6 +13,7 @@ var _ = require( 'underscore' ),
 
 var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + "aerogear-js/" : "../aerogear-js/";
 var tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/" : "../aerogearjsbuilder/data/";
+var repoDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR : "../aerogearjsbuilder/";
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = {
@@ -96,7 +97,12 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             });
 
             replacement += "]";
-            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".js'" ).replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" ).replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".source-map.js'" );
+            var temp = data.replace("\"@SRC@\"", replacement)
+                           .replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".js'" )
+                           .replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" )
+                           .replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".source-map.js'" )
+                           .replace( "\"@CONCAT@\"", "'" + repoDir + "node_modules/grunt-contrib-concat/tasks'")
+                           .replace( "\"@UGLY@\"", "'" + repoDir + "node_modules/grunt-contrib-uglify/tasks'");
             //write a new temp grunt file
             fs.writeFile( tempSaveDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
@@ -135,11 +141,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                         console.log('child process exited with code ' + code);
                         //remove temp grunt file
 
-                        rimraf( tempSaveDir + directoryDate + "/", function( err ) {
+                        /*rimraf( tempSaveDir + directoryDate + "/", function( err ) {
                             if( err ) {
                                 console.log( err );
                             }
-                        });
+                        });*/
                     });
                 });
             });
