@@ -100,9 +100,10 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
             var temp = data.replace("\"@SRC@\"", replacement)
                            .replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".js'" )
                            .replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" )
-                           .replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".source-map.js'" )
+                           .replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".map.js'" )
                            .replace( "\"@CONCAT@\"", "'" + repoDir + "node_modules/grunt-contrib-concat/tasks'")
-                           .replace( "\"@UGLY@\"", "'" + repoDir + "node_modules/grunt-contrib-uglify/tasks'");
+                           .replace( "\"@UGLY@\"", "'" + repoDir + "node_modules/grunt-contrib-uglify/tasks'")
+                           .replace( "\"@SOURCEMAPNAME@\"", "'<%= pkg.name %>." + hash + ".min.js'");
             //write a new temp grunt file
             fs.writeFile( tempSaveDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
@@ -129,7 +130,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                     archive.addFiles([
                         { name: "aerogear." + hash + ".min.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".min.js" },
                         { name: "aerogear." + hash + ".js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".js" },
-                        { name: "aerogear." + hash + ".source-map.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".source-map.js" }
+                        { name: "aerogear." + hash + ".map.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".map.js" }
                     ], function( err ) {
                         if( err ) {
                             errorResponse( res, err );
@@ -141,11 +142,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                         console.log('child process exited with code ' + code);
                         //remove temp grunt file
 
-                        /*rimraf( tempSaveDir + directoryDate + "/", function( err ) {
+                        rimraf( tempSaveDir + directoryDate + "/", function( err ) {
                             if( err ) {
                                 console.log( err );
                             }
-                        });*/
+                        });
                     });
                 });
             });

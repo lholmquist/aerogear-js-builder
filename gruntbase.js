@@ -40,7 +40,7 @@ module.exports = function(grunt) {
                 options: {
                     banner: "<%= meta.banner %>",
                     sourceMap: "@DESTSOURCEMAP@",
-                    sourceMappingURL: "aerogear.min.js",
+                    sourceMappingURL: "@SOURCEMAPNAME@",
                     beautify: {
                         ascii_only: true
                     }
