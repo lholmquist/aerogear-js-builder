@@ -16,9 +16,9 @@
     "src/pipeline/adapters/rest": {
         "external": [
             "src/aerogear.core",
-            "src/pipeline/aerogear.pipeline",
             "src/utilities/aerogear.utilities",
             "external/uuid/uuid"
+            "src/pipeline/aerogear.pipeline"
         ],
         "description": "Pipeline Rest Adapter",
         "label": "Rest",
@@ -28,8 +28,8 @@
     "src/data-manager/adapters/memory": {
         "external": [
             "src/aerogear.core",
-            "src/data-manager/aerogear.datamanager",
             "external/uuid/uuid"
+            "src/data-manager/aerogear.datamanager"
         ],
     	"description": "Memory Data Manager Adapter",
         "label": "Memory",
@@ -42,8 +42,8 @@
         ],
         "external": [
             "src/aerogear.core",
-            "src/data-manager/aerogear.datamanager",
-            "external/uuid/uuid"
+            "external/uuid/uuid",
+            "src/data-manager/aerogear.datamanager"
         ],
         "description": "Local/Session Storage Data Manager Adapter",
         "label": "Web Storage",
