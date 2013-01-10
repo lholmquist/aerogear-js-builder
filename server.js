@@ -87,16 +87,16 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                 errorResponse( res, err );
             }
             //build replacement
-            var replacement = "[" + zcache[ "banner" ] + ", ";
+            var replacement = "[ ";
             _.each( config.include, function( val, index, list ) {
-                replacement += zcache[ "aerogearstart" ] + val + ".js" + zcache[ "aerogearend" ];
+                replacement += "'" + val + ".js'";
                 if( (index+1) !== list.length ) {
                     replacement += ", ";
                 }
             });
 
             replacement += "]";
-            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".js'" ).replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" );
+            var temp = data.replace("\"@SRC@\"", replacement).replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".js'" ).replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" ).replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".source-map.js'" );
             //write a new temp grunt file
             fs.writeFile( tempSaveDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
@@ -106,7 +106,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                 }
                 var util  = require('util'),
                 spawn = require('child_process').spawn,
-                grunt = spawn( "./node_modules/grunt/bin/grunt",["--base", dataDir, "--config", tempSaveDir + directoryDate + "/" + hash + ".js" ]);
+                grunt = spawn( "./node_modules/grunt-cli/bin/grunt",["--verbose", "--base", dataDir, "--gruntfile", tempSaveDir + directoryDate + "/" + hash + ".js" ]);
                 //base should be where the files are, config is the grunt.js file
                 grunt.stdout.on('data', function (data) {
                     console.log('stdout: ' + data);
@@ -122,7 +122,8 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                     var archive = new zip();
                     archive.addFiles([
                         { name: "aerogear." + hash + ".min.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".min.js" },
-                        { name: "aerogear." + hash + ".js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".js" }
+                        { name: "aerogear." + hash + ".js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".js" },
+                        { name: "aerogear." + hash + ".source-map.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".source-map.js" }
                     ], function( err ) {
                         if( err ) {
                             errorResponse( res, err );

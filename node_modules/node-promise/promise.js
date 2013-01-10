@@ -407,7 +407,7 @@ exports.wait = function(target){
 
 function composeAll(fail_on_error) {
 	return function(array) {
-		var deferred = new Deferred(),
+		var deferred = new Deferred( cancel ),
 			once = true;
 
 		if( !(array instanceof Array) )
@@ -427,19 +427,24 @@ function composeAll(fail_on_error) {
 					if( --todo === 0 )	
 						deferred.resolve(array);
 				}
+
+				function failOnce( err ) {
+					if( once ) {
+						cancel( i );
+						deferred.reject( err );
+						once = false;
+					}
+				}
 			} );
 
-		function failOnce( err ) {
-			if( once ) {
-				array.forEach( function(p) {
-					if( p.then && p.cancel )	p.cancel();
-				} );
-				deferred.reject( err );
-				once = false;
-			}
-		}
-
 		return deferred.promise;
+
+		function cancel( except ) {
+			array.forEach( function(p,i) {
+				if( i !== except && p.then && p.cancel )	
+					p.cancel();
+			} );
+		}
 	}
 }
 
