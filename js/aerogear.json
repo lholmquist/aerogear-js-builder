@@ -17,7 +17,7 @@
         "external": [
             "src/aerogear.core",
             "src/utilities/aerogear.utilities",
-            "external/uuid/uuid"
+            "external/uuid/uuid",
             "src/pipeline/aerogear.pipeline"
         ],
         "description": "Pipeline Rest Adapter",
@@ -28,7 +28,7 @@
     "src/data-manager/adapters/memory": {
         "external": [
             "src/aerogear.core",
-            "external/uuid/uuid"
+            "external/uuid/uuid",
             "src/data-manager/aerogear.datamanager"
         ],
     	"description": "Memory Data Manager Adapter",
