@@ -54,9 +54,9 @@ app.get( "/aerogearjsbuilder/deps", function( request, response ) {
 });
 
 app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
-    var include = req.param( "include", "main" ).split( "," ).sort(),
-        exclude = req.param( "exclude", "" ).split( "," ).sort(),
-        external = req.param( "external", "" ).split( "," ).sort(),
+    var include = req.param( "include", "main" ).split( "," ),
+        exclude = req.param( "exclude", "" ).split( "," ),
+        external = req.param( "external", "" ).split( "," ),
         optimize = Boolean( req.param( "optimize", false ) ).valueOf(),
         name = req.params.name || ( req.params.repo + ".js" ),
         ext = (optimize !== "none" ? ".min" : "") + ( path.extname( name ) || ".js" ),
@@ -65,7 +65,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
         dstDir, dstFile, digest, hash;
 
     if( external[0].length ) {
-        include = include.concat( external );
+        include = external.concat( include );
     }
     var config = {
         include: include,
@@ -103,7 +103,7 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                            .replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".map.js'" )
                            .replace( "\"@CONCAT@\"", "'" + repoDir + "node_modules/grunt-contrib-concat/tasks'")
                            .replace( "\"@UGLY@\"", "'" + repoDir + "node_modules/grunt-contrib-uglify/tasks'")
-                           .replace( "\"@SOURCEMAPNAME@\"", "'<%= pkg.name %>." + hash + ".min.js'");
+                           .replace( "\"@SOURCEMAPNAME@\"", "'<%= pkg.name %>.custom.min.js'");
             //write a new temp grunt file
             fs.writeFile( tempSaveDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
@@ -128,9 +128,9 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                     //Files are created, time to zip them up
                     var archive = new zip();
                     archive.addFiles([
-                        { name: "aerogear." + hash + ".min.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".min.js" },
-                        { name: "aerogear." + hash + ".js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".js" },
-                        { name: "aerogear." + hash + ".map.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".map.js" }
+                        { name: "aerogear.custom.min.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".min.js" },
+                        { name: "aerogear.custom.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".js" },
+                        { name: "aerogear.custom.map", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".map.js" }
                     ], function( err ) {
                         if( err ) {
                             errorResponse( res, err );
@@ -142,11 +142,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                         console.log('child process exited with code ' + code);
                         //remove temp grunt file
 
-                        rimraf( tempSaveDir + directoryDate + "/", function( err ) {
+                        /*rimraf( tempSaveDir + directoryDate + "/", function( err ) {
                             if( err ) {
                                 console.log( err );
                             }
-                        });
+                        });*/
                     });
                 });
             });

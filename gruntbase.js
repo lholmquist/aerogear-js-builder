@@ -40,17 +40,12 @@ module.exports = function(grunt) {
                 options: {
                     banner: "<%= meta.banner %>",
                     sourceMap: "@DESTSOURCEMAP@",
-                    sourceMappingURL: "@SOURCEMAPNAME@",
+                    sourceMappingURL: "aerogear.custom.map",
+                    sourceMapPrefix: 4,
                     beautify: {
                         ascii_only: true
                     }
                 }
-            }
-        },
-        min: {
-            dist: {
-                src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-                dest: "@DESTMIN@"
             }
         }
     });
