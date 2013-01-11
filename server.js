@@ -36,7 +36,7 @@ var app  = express.createServer();
 /*  =====================================================================  */
 /*  Setup route handlers.  */
 /*  =====================================================================  */
-app.get( "/aerogearjsbuilder/deps", function( request, response ) {
+app.get( "/builder/deps", function( request, response ) {
     var callback = request.query.callback || request.query.jsonp;
         responseBody = "";
 
@@ -54,7 +54,7 @@ app.get( "/aerogearjsbuilder/deps", function( request, response ) {
     });
 });
 
-app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
+app.get( '/builder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
     var include = req.param( "include", "main" ).split( "," ),
         exclude = req.param( "exclude", "" ).split( "," ),
         external = req.param( "external", "" ).split( "," ),
