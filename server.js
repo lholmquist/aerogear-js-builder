@@ -11,9 +11,10 @@ var _ = require( 'underscore' ),
     zip = require("node-native-zip" ),
     rimraf = require( "rimraf" );
 
-var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + "aerogear-js/" : "../aerogear-js/";
-var tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/" : "../aerogearjsbuilder/data/";
-var repoDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR : "../aerogearjsbuilder/";
+var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + "aerogear-js/" : "../aerogear-js/",
+    tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/" : "../aerogearjsbuilder/data/",
+    repoDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR : "../aerogearjsbuilder/",
+    sourceMapPrefix = process.env.OPENSHIFT_REPO_DIR ? "9" : "4";
 
 //  Local cache for static content [fixed and loaded at startup]
 var zcache = {
@@ -98,12 +99,13 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
 
             replacement += "]";
             var temp = data.replace("\"@SRC@\"", replacement)
-                           .replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".js'" )
-                           .replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".min.js'" )
-                           .replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>." + hash + ".map.js'" )
+                           .replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>.custom.js'" )
+                           .replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>.custom.min.js'" )
+                           .replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>.custom.map'" )
                            .replace( "\"@CONCAT@\"", "'" + repoDir + "node_modules/grunt-contrib-concat/tasks'")
                            .replace( "\"@UGLY@\"", "'" + repoDir + "node_modules/grunt-contrib-uglify/tasks'")
-                           .replace( "\"@SOURCEMAPNAME@\"", "'<%= pkg.name %>.custom.min.js'");
+                           .replace( "\"@SOURCEMAPNAME@\"", "'<%= pkg.name %>.custom.min.js'")
+                           .replace( "\"@SOURCEMAPPREFIX@\"", sourceMapPrefix );
             //write a new temp grunt file
             fs.writeFile( tempSaveDir + directoryDate + "/" + hash + ".js", temp, "utf8", function( err ) {
 
@@ -128,9 +130,9 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                     //Files are created, time to zip them up
                     var archive = new zip();
                     archive.addFiles([
-                        { name: "aerogear.custom.min.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".min.js" },
-                        { name: "aerogear.custom.js", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".js" },
-                        { name: "aerogear.custom.map", path: tempSaveDir + directoryDate + "/aerogear." + hash + ".map.js" }
+                        { name: "aerogear.custom.min.js", path: tempSaveDir + directoryDate + "/aerogear.custom.min.js" },
+                        { name: "aerogear.custom.js", path: tempSaveDir + directoryDate + "/aerogear.custom.js" },
+                        { name: "aerogear.custom.map", path: tempSaveDir + directoryDate + "/aerogear.custom.map" }
                     ], function( err ) {
                         if( err ) {
                             errorResponse( res, err );
@@ -142,11 +144,11 @@ app.get( '/aerogearjsbuilder/bundle/:owner/:repo/:ref/:name?', function ( req, r
                         console.log('child process exited with code ' + code);
                         //remove temp grunt file
 
-                        /*rimraf( tempSaveDir + directoryDate + "/", function( err ) {
+                        rimraf( tempSaveDir + directoryDate + "/", function( err ) {
                             if( err ) {
                                 console.log( err );
                             }
-                        });*/
+                        });
                     });
                 });
             });
