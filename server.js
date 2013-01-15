@@ -16,17 +16,6 @@ var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + 
     repoDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR : "../aerogearjsbuilder/",
     sourceMapPrefix = process.env.OPENSHIFT_REPO_DIR ? "9" : "4";
 
-//  Local cache for static content [fixed and loaded at startup]
-var zcache = {
-    'index.html': '',
-    'builder.html': '',
-    'banner': "'<banner:meta.banner>'",
-    'aerogearstart': "'<file_strip_banner:",
-    'aerogearend':">'"
-};
-zcache[ 'index.html' ] = fs.readFileSync( './index.html' ); //  Cache index.html
-zcache[ 'builder.html' ] = fs.readFileSync( "./builder.html" );
-
 app.use(express.bodyParser());
 
 // Create "express" server.
@@ -164,23 +153,8 @@ app.get( '/builder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
 
 });
 
-// Handler for GET /
-app.get('/', function(req, res){
-    res.send( zcache[ "builder.html" ], { "Content-Type": "text/html" } );
-});
-
-//TODO: probably a better way of doing this
-app.get( "/css/*", function( req, res ) {
-    res.send( fs.readFileSync("." + req.path ), { "Content-Type": "text/css" } );
-});
-
-app.get( "/js/*", function( req, res ) {
-    res.send( fs.readFileSync("." + req.path ), { "Content-Type": "text/javascript" } );
-});
-
 
 //OPENSHIFT Stuff
-
 //  Get the environment variables we need.
 var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP || "localhost";
 var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
