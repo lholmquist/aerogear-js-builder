@@ -41,21 +41,22 @@ var app  = express.createServer();
 /*  Setup route handlers.  */
 /*  =====================================================================  */
 app.get( "/builder/deps", function( request, response ) {
-    var callback = request.query.callback || request.query.jsonp;
-        responseBody = "";
+    var callback = request.query.callback || request.query.jsonp,
+        responseBody = "",
+        packageJSON = require( dataDir + "package.json" ),
+        aerogearJSON = require( "./js/aerogear.json" );
 
-    fs.readFile( "./js/aerogear.json", function( err, data ) {
-        if( err ) {
-            responseBody = "{ 'error': " + err + "}";
+        if( packageJSON.version ) {
+            aerogearJSON.version.version = packageJSON.version;
         }
-        responseBody = data;
+
+        responseBody = JSON.stringify( aerogearJSON );
 
         if( callback ) {
             response.send( callback + "(" + responseBody + " ) " );
         } else {
             response.send( responseBody );
         }
-    });
 });
 
 app.get( '/builder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
