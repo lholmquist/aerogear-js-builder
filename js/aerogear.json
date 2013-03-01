@@ -1,7 +1,7 @@
 {
     "version": {
         "group": "exclude",
-        "version": "1.0.0.M3"
+        "version": "1.0.0-CR1"
     },
     "src/authentication/adapters/rest": {
         "external": [
@@ -19,6 +19,9 @@
             "src/utilities/aerogear.utilities",
             "external/uuid/uuid",
             "src/pipeline/aerogear.pipeline"
+        ],
+        "deps": [
+            "src/authentication/adapters/rest"
         ],
         "description": "Pipeline Rest Adapter",
         "label": "Rest",
