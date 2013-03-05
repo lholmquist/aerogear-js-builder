@@ -16,7 +16,6 @@
     "src/pipeline/adapters/rest": {
         "external": [
             "src/aerogear.core",
-            "src/utilities/aerogear.utilities",
             "external/uuid/uuid",
             "src/pipeline/aerogear.pipeline"
         ],
