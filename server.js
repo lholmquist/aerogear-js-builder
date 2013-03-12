@@ -105,6 +105,7 @@ app.get( '/builder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
             replacement += "]";
             var temp = data.replace("\"@SRC@\"", replacement)
                            .replace("\"@DEST@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>.custom.js'" )
+                           .replace("\"@DESTIIFE@\"", "'" + tempSaveDir + directoryDate + "/aerogear.custom.js'" )
                            .replace( "\"@DESTMIN@\"",  "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>.custom.min.js'" )
                            .replace( "\"@DESTSOURCEMAP@\"", "'" + tempSaveDir + directoryDate + "/<%= pkg.name %>.custom.map'" )
                            .replace( "\"@CONCAT@\"", "'" + repoDir + "node_modules/grunt-contrib-concat/tasks'")

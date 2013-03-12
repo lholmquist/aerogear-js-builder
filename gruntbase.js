@@ -50,10 +50,20 @@ module.exports = function(grunt) {
         }
     });
 
+    // IIFE wrapper task
+    grunt.registerTask('iife', function( custom ) {
+        var fs = require("fs"),
+            fileName = "@DESTIIFE@" ,
+            fileText = fs.readFileSync( fileName, "utf-8" );
+
+        fileText = fileText.replace( /\*\//, "*/\n(function( window, undefined ) {\n" );
+        fs.writeFileSync( fileName, fileText + "})( this );\n", "utf-8" );
+    });
+
     // grunt-contrib tasks
     grunt.task.loadTasks( "@CONCAT@" );
     grunt.task.loadTasks( "@UGLY@" );
     // Default task.
-    grunt.registerTask('default', ['concat:dist','uglify:all']);
+    grunt.registerTask('default', ['concat:dist','iife','uglify:all']);
 
 };
