@@ -170,7 +170,6 @@ app.get( '/builder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
 
 });
 
-
 //OPENSHIFT Stuff
 //  Get the environment variables we need.
 var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP || "localhost";
