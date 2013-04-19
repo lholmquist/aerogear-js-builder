@@ -19,17 +19,27 @@ module.exports = function(grunt) {
                 '* distributed under the License is distributed on an "AS IS" BASIS,<%= "\\n" %>' +
                 '* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<%= "\\n" %>' +
                 '* See the License for the specific language governing permissions and<%= "\\n" %>' +
-                '* limitations under the License.<%= "\\n" %>' +
-                '*/<%= "\\n" %>'
+                '* limitations under the License.<%= "\\n" %>'
         },
         concat: {
             options: {
                 stripBanners: true,
-                banner: "<%= meta.banner %>"
+                banner: '<%= meta.banner %>' + '*/<%= "\\n" %>'
             },
             dist: {
                 src: "@SRC@",
                 dest: "@DEST@"
+            }
+        },
+        "pre-uglify": {
+            all: {
+                files: {
+                    "@DESTMINPRE@" : [ "<%= concat.dist.dest %>" ]
+                    //"dist/aerogear.pre-min.js": [ "dist/aerogear.js" ]
+                },
+                options: {
+                    banner: "<%= meta.banner %>" + "//@ sourceMappingURL=aerogear.custom.map\n" + '*/<%= "\\n" %>'
+                }
             }
         },
         uglify: {
@@ -38,7 +48,7 @@ module.exports = function(grunt) {
                     "@DESTMIN@": [ "<%= concat.dist.dest %>" ]
                 },
                 options: {
-                    banner: "<%= meta.banner %>",
+                    preserveComments: "some",
                     sourceMap: "@DESTSOURCEMAP@",
                     sourceMappingURL: "aerogear.custom.map",
                     sourceMapPrefix: "@SOURCEMAPPREFIX@",
@@ -60,10 +70,29 @@ module.exports = function(grunt) {
         fs.writeFileSync( fileName, fileText + "})( this );\n", "utf-8" );
     });
 
+    // Prepare files for uglify to fix source map issues
+    // Completely "inspired" by jQuery https://github.com/jquery/jquery/commit/9d16fe6283667396094d49559a37fc672c06252c
+    grunt.registerMultiTask( "pre-uglify", function() {
+        var banner = this.options().banner;
+
+        this.files.forEach(function( mapping ) {
+            // Join src
+            var input = mapping.src.map(function( file ) {
+                var contents = grunt.file.read( file );
+
+                // Strip banners
+                return contents.replace( /^\/\*!(?:.|\n)*?\*\/\n?/gm, "" );
+            }).join("\n");
+
+            // Write temp file (with optional banner)
+            grunt.file.write( mapping.dest, ( banner || "" ) + input );
+        });
+    });
+
     // grunt-contrib tasks
     grunt.task.loadTasks( "@CONCAT@" );
     grunt.task.loadTasks( "@UGLY@" );
     // Default task.
-    grunt.registerTask('default', ['concat:dist','iife','uglify:all']);
+    grunt.registerTask('default', ['concat:dist','iife','pre-uglify:all', 'uglify:all']);
 
 };
