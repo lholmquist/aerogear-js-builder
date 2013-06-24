@@ -1,7 +1,7 @@
 {
     "version": {
         "group": "exclude",
-        "version": "1.0.0-CR1"
+        "version": "1.1.0"
     },
     "src/authentication/adapters/rest": {
         "external": [
@@ -51,5 +51,25 @@
         "label": "Web Storage",
         "group": "data-manager",
         "groupLabel" : "Data Manager"
+    },
+    "src/notifier/adapters/vertx": {
+        "external": [
+            "src/aerogear.core",
+            "src/notifier/aerogear.notifier"
+        ],
+        "description": "Vert.x notifier Adapter",
+        "label": "Vert.x",
+        "group": "notifier",
+        "groupLabel" : "Notifer"
+    },
+    "src/notifier/adapters/stompws": {
+        "external": [
+            "src/aerogear.core",
+            "src/notifier/aerogear.notifier"
+        ],
+        "description": "STOMP over Websockets Notifier Adapter",
+        "label": "STOMP",
+        "group": "notifier",
+        "groupLabel" : "Notifier"
     }
 }
