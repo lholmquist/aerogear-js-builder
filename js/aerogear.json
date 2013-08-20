@@ -81,8 +81,8 @@
         ],
         "description": "AeroGear implementation of the SimplePush server protocol",
         "label": "SimplePush",
-        "group": "notifier",
-        "groupLabel" : "Notifier"
+        "group": "push",
+        "groupLabel" : "Push"
     },
     "src/unifiedpush/aerogear.unifiedpush": {
         "external": [
@@ -90,8 +90,8 @@
             "external/base64/base64"
         ],
         "description": "AeroGear UnifiedPush Client SDK",
-        "label": "UnifiedPush",
-        "group": "unifiedpush",
-        "groupLabel" : "UnifiedPush Client SDK"
+        "label": "UnifiedPush Client SDK",
+        "group": "push",
+        "groupLabel" : "Push"
     }
 }
