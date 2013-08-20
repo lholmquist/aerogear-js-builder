@@ -75,19 +75,19 @@
     "src/notifier/adapters/simplePush": {
         "external": [
             "src/aerogear.core",
-            "external/uuid/uuid.js",
+            "external/uuid/uuid",
             "src/notifier/aerogear.notifier",
-            "src/simplepush/aerogear.simplepush.js"
+            "src/simplepush/aerogear.simplepush"
         ],
         "description": "AeroGear implementation of the SimplePush server protocol",
         "label": "SimplePush",
         "group": "notifier",
         "groupLabel" : "Notifier"
     },
-    "src/aerogear.unifiedpush": {
+    "src/unifiedpush/aerogear.unifiedpush": {
         "external": [
             "src/aerogear.core",
-            "external/base64/base64.js"
+            "external/base64/base64"
         ],
         "description": "AeroGear UnifiedPush Client SDK",
         "label": "UnifiedPush",
