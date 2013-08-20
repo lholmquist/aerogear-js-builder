@@ -1,7 +1,7 @@
 {
     "version": {
         "group": "exclude",
-        "version": "1.1.2"
+        "version": "1.2.0"
     },
     "src/authentication/adapters/rest": {
         "external": [
@@ -71,5 +71,28 @@
         "label": "STOMP",
         "group": "notifier",
         "groupLabel" : "Notifier"
+    },
+    "src/notifier/adapters/simplePush": {
+        "external": [
+            "src/aerogear.core",
+            "external/uuid/uuid.js",
+            "src/notifier/aerogear.notifier",
+            "src/simplepush/aerogear.simplepush.js"
+        ],
+        "description": "AeroGear implementation of the SimplePush server protocol",
+        "label": "SIMPLEPUSH",
+        "group": "notifier",
+        "groupLabel" : "Notifier"
+    },
+    "src/notifier/unifiedpush": {
+        "external": [
+            "src/aerogear.core",
+            "external/base64/base64.js",
+            "src/unifiedpush/aerogear.unifiedpush.js"
+        ],
+        "description": "AeroGear UnifiedPush Client SDK",
+        "label": "UNIFIEDPUSH",
+        "group": "unifiedpush",
+        "groupLabel" : "UnifiedPush Client SDK"
     }
 }
