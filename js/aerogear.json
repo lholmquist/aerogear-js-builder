@@ -13,6 +13,16 @@
         "group": "Authentication",
         "groupLabel" : "Authentication"
     },
+    "src/crypto/aerogear.crypto": {
+        "external": [
+            "external/crypto/sjcl",
+            "src/aerogear.core"
+        ],
+        "description": "AeroGear Crypto",
+        "label": "Crypto",
+        "group": "Crypto",
+        "groupLabel" : "Crypto"
+    },
     "src/pipeline/adapters/rest": {
         "external": [
             "src/aerogear.core",
@@ -26,31 +36,6 @@
         "label": "Rest",
         "group": "pipeline",
         "groupLabel" : "Pipeline"
-    },
-    "src/data-manager/adapters/memory": {
-        "external": [
-            "src/aerogear.core",
-            "external/uuid/uuid",
-            "src/data-manager/aerogear.datamanager"
-        ],
-    	"description": "Memory Data Manager Adapter",
-        "label": "Memory",
-        "group": "data-manager",
-        "groupLabel" : "Data Manager"
-    },
-    "src/data-manager/adapters/session-local": {
-        "deps": [
-            "src/data-manager/adapters/memory"
-        ],
-        "external": [
-            "src/aerogear.core",
-            "external/uuid/uuid",
-            "src/data-manager/aerogear.datamanager"
-        ],
-        "description": "Local/Session Storage Data Manager Adapter",
-        "label": "Web Storage",
-        "group": "data-manager",
-        "groupLabel" : "Data Manager"
     },
     "src/notifier/adapters/vertx": {
         "external": [
@@ -93,5 +78,65 @@
         "label": "UnifiedPush Client SDK",
         "group": "push",
         "groupLabel" : "Push"
+    },
+    "src/data-manager/adapters/memory": {
+        "external": [
+            "src/aerogear.core",
+            "external/uuid/uuid",
+            "src/data-manager/aerogear.datamanager",
+            "src/data-manager/adapters/base"
+        ],
+    	"description": "Memory Data Manager Adapter",
+        "label": "Memory",
+        "group": "data-manager",
+        "groupLabel" : "Data Manager"
+    },
+    "src/data-manager/adapters/session-local": {
+        "deps": [
+            "src/crypto/aerogear.crypto",
+            "src/data-manager/adapters/memory"
+        ],
+        "external": [
+            "src/aerogear.core",
+            "external/uuid/uuid",
+            "src/data-manager/aerogear.datamanager",
+            "src/data-manager/adapters/base"
+        ],
+        "description": "Local/Session Storage Data Manager Adapter",
+        "label": "Web Storage",
+        "group": "data-manager",
+        "groupLabel" : "Data Manager"
+    },
+    "src/data-manager/adapters/indexeddb": {
+        "deps": [
+            "src/crypto/aerogear.crypto",
+            "src/data-manager/adapters/memory"
+        ],
+        "external": [
+            "src/aerogear.core",
+            "external/uuid/uuid",
+            "src/data-manager/aerogear.datamanager",
+            "src/data-manager/adapters/base"
+        ],
+        "description": "IndexedDB Data Manager Adapter",
+        "label": "IndexedDB",
+        "group": "data-manager",
+        "groupLabel" : "Data Manager"
+    },
+    "src/data-manager/adapters/websql": {
+        "deps": [
+            "src/crypto/aerogear.crypto",
+            "src/data-manager/adapters/memory"
+        ],
+        "external": [
+            "src/aerogear.core",
+            "external/uuid/uuid",
+            "src/data-manager/aerogear.datamanager",
+            "src/data-manager/adapters/base"
+        ],
+        "description": "WebSQL Data Manager Adapter",
+        "label": "WebSQL",
+        "group": "data-manager",
+        "groupLabel" : "Data Manager"
     }
 }
