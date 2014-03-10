@@ -3,6 +3,16 @@
         "group": "exclude",
         "version": "1.2.0"
     },
+    "src/authorization/adapters/oauth2": {
+        "external": [
+            "src/aerogear.core",
+            "src/authorization/aerogear.authz"
+        ],
+        "description": "OAuth2 Authorization Adapter",
+        "label": "OAuth2",
+        "group": "Authorization",
+        "groupLabel" : "Authorization"
+    },
     "src/authentication/adapters/rest": {
         "external": [
             "src/aerogear.core",
@@ -30,7 +40,7 @@
             "src/pipeline/aerogear.pipeline"
         ],
         "deps": [
-            "src/authentication/adapters/rest"
+            "src/authorization/adapters/oauth2"
         ],
         "description": "Pipeline Rest Adapter",
         "label": "Rest",
