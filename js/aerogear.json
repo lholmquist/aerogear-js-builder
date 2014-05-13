@@ -49,7 +49,8 @@
     "src/notifier/adapters/vertx": {
         "external": [
             "src/aerogear.core",
-            "src/notifier/aerogear.notifier"
+            "src/notifier/aerogear.notifier",
+            "src/notifier/adapters/base"
         ],
         "description": "Vert.x notifier Adapter",
         "label": "Vert.x",
@@ -59,10 +60,22 @@
     "src/notifier/adapters/stompws": {
         "external": [
             "src/aerogear.core",
-            "src/notifier/aerogear.notifier"
+            "src/notifier/aerogear.notifier",
+            "src/notifier/adapters/base"
         ],
         "description": "STOMP over Websockets Notifier Adapter",
         "label": "STOMP",
+        "group": "notifier",
+        "groupLabel" : "Notifier"
+    },
+    "src/notifier/adapters/mqttws": {
+        "external": [
+            "src/aerogear.core",
+            "src/notifier/aerogear.notifier",
+            "src/notifier/adapters/base"
+        ],
+        "description": "MQTT over Websockets Notifier Adapter",
+        "label": "MQTT",
         "group": "notifier",
         "groupLabel" : "Notifier"
     },
@@ -81,7 +94,9 @@
     "src/unifiedpush/aerogear.unifiedpush": {
         "external": [
             "src/aerogear.core",
-            "external/base64/base64"
+            "external/es6-promise/promise-0.1.1",
+            "external/base64/base64",
+            "src.aerogear.ajax"
         ],
         "description": "AeroGear UnifiedPush Client SDK",
         "label": "UnifiedPush Client SDK",
