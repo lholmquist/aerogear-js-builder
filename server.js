@@ -17,7 +17,6 @@
 //  OpenShift sample Node application
 var _ = require( 'underscore' ),
     express = require( 'express' ),
-    app = express.createServer(),
     crypto = require( 'crypto' ),
     fs = require( 'fs' ),
     mime = require( 'mime' ),
@@ -106,7 +105,7 @@ var SampleApp = function() {
      *  the handlers.
      */
     self.initializeServer = function() {
-        self.app = express.createServer();
+        self.app = express();
 
         self.app.get( "/builder/deps", function( request, response ) {
             var callback = request.query.callback || request.query.jsonp,
