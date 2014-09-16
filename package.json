@@ -30,15 +30,8 @@
   },
 
   "dependencies": {
-    "async":"latest",
-    "css-concat":"latest",
     "express":"2.5.2",
     "mime":"latest",
-    "mkdirp": "latest",
-    "optimist":"latest",
-    "node-promise":"latest",
-    "request":"latest",
-    "requirejs":"1.0.8",
     "rimraf":"latest",
     "semver":"latest",
     "underscore":"latest",
