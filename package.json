@@ -4,7 +4,7 @@
   "description": "AeroGear Custom Javascript Builder",
   "author": {
     "name": "Red Hat, Inc.",
-    "url":  "http://aerogear.org/"
+    "url": "http://aerogear.org/"
   },
   "maintainers": {
     "name": "Lucas Holmquist",
@@ -28,7 +28,6 @@
     "node": ">= 0.6.0",
     "npm": ">= 1.0.0"
   },
-
   "dependencies": {
     "express":"2.5.2",
     "mime":"latest",
