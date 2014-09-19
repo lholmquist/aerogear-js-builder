@@ -29,16 +29,16 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
-    "express":"~4.9.0",
-    "mime":"latest",
-    "rimraf":"latest",
-    "semver":"latest",
-    "underscore":"latest",
-    "node-native-zip":"~1.0.1",
-    "grunt-contrib-concat": "~0.1.2rc5",
-    "grunt-contrib-uglify": "~0.1.1rc5",
-    "grunt-cli": "~0.1.6",
-    "grunt": "~0.4.0rc5"
+    "express":"4.9.3",
+    "mime":"1.2.11",
+    "rimraf":"2.2.8",
+    "semver":"3.0.1",
+    "underscore":"1.7.0",
+    "node-native-zip":"1.1.0",
+    "grunt-contrib-concat": "0.5.0",
+    "grunt-contrib-uglify": "0.6.0",
+    "grunt-cli": "0.1.13",
+    "grunt": "0.4.5"
   },
   "devDependencies": {
     },
