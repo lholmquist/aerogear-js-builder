@@ -5,22 +5,14 @@
     "src/authorization/adapters/oauth2": {
         "external": [
             "src/aerogear.core",
+            "external/es6-promise/promise-0.1.1",
+            "src/aerogear.ajax",
             "src/authorization/aerogear.authz"
         ],
         "description": "OAuth2 Authorization Adapter",
         "label": "OAuth2",
         "group": "Authorization",
         "groupLabel" : "Authorization"
-    },
-    "src/authentication/adapters/rest": {
-        "external": [
-            "src/aerogear.core",
-            "src/authentication/aerogear.auth"
-        ],
-        "description": "Rest Authentication Adapter",
-        "label": "Rest",
-        "group": "Authentication",
-        "groupLabel" : "Authentication"
     },
     "src/crypto/aerogear.crypto": {
         "external": [
@@ -31,20 +23,6 @@
         "label": "Crypto",
         "group": "Crypto",
         "groupLabel" : "Crypto"
-    },
-    "src/pipeline/adapters/rest": {
-        "external": [
-            "src/aerogear.core",
-            "external/uuid/uuid",
-            "src/pipeline/aerogear.pipeline"
-        ],
-        "deps": [
-            "src/authorization/adapters/oauth2"
-        ],
-        "description": "Pipeline Rest Adapter",
-        "label": "Rest",
-        "group": "pipeline",
-        "groupLabel" : "Pipeline"
     },
     "src/notifier/adapters/vertx": {
         "external": [
@@ -107,6 +85,7 @@
         "external": [
             "src/aerogear.core",
             "external/uuid/uuid",
+            "external/es6-promise/promise-0.1.1",
             "src/data-manager/aerogear.datamanager",
             "src/data-manager/adapters/base"
         ],
