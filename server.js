@@ -23,11 +23,11 @@ var _ = require( 'underscore' ),
     mime = require( 'mime' ),
     path = require( 'path' ),
     url = require( 'url' ),
-    zip = require("node-native-zip" ),
+    archiver = require('archiver'),
     rimraf = require( "rimraf" );
 
 var dataDir = process.env.OPENSHIFT_DATA_DIR ? process.env.OPENSHIFT_DATA_DIR + "aerogear-js/" : "../aerogear-js/",
-    tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/" : "../aerogearjsbuilder/data/",
+    tempSaveDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR + "data/" : "../aerogear-js-builder/data/",
     repoDir = process.env.OPENSHIFT_REPO_DIR ? process.env.OPENSHIFT_REPO_DIR : "../aerogear-js-builder/",
     sourceMapPrefix = process.env.OPENSHIFT_REPO_DIR ? "9" : "4";
 
@@ -171,20 +171,15 @@ app.get( '/builder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
                 grunt.on('exit', function (code) {
 
                     //Files are created, time to zip them up
-                    var archive = new zip();
-                    archive.addFiles([
-                        { name: "aerogear.custom.min.js", path: tempSaveDir + directoryDate + "/aerogear.custom.min.js" },
-                        { name: "aerogear.custom.js", path: tempSaveDir + directoryDate + "/aerogear.custom.js" },
-                        { name: "aerogear.custom.map", path: tempSaveDir + directoryDate + "/aerogear.custom.map" }
-                    ], function( err ) {
-                        if( err ) {
-                            errorResponse( res, err );
-                        }
-                        var buff = archive.toBuffer();
+                    var archive = archiver( "zip" );
 
-                        res.send( buff );
-                        //res.send( fs.readFileSync( dataDir + directoryDate + "/aerogear." + hash + ".min.js" ) );
-                        console.log('child process exited with code ' + code);
+                    archive.on( "error", function( err ) {
+                        console.log('zip up time err', err);
+                        res.status( 500 ).send( { error: err } );
+                    });
+
+                    res.on( "close", function () {
+
                         //remove temp grunt file
 
                         rimraf( tempSaveDir + directoryDate + "/", function( err ) {
@@ -192,7 +187,25 @@ app.get( '/builder/bundle/:owner/:repo/:ref/:name?', function ( req, res ) {
                                 console.log( err );
                             }
                         });
+
+                        return res.status(200).send( "OK" ).end();
                     });
+
+                    res.attachment( "aerogear.custom.zip" );
+
+                    archive.pipe(res);
+
+                    var files = [
+                        tempSaveDir + directoryDate + "/aerogear.custom.min.js",
+                        tempSaveDir + directoryDate + "/aerogear.custom.js",
+                        tempSaveDir + directoryDate + "/aerogear.custom.min.js.map"
+                    ];
+
+                    for( var i in files ) {
+                        archive.append( fs.createReadStream( files[ i ] ), { name: path.basename( files[ i ] ) });
+                    }
+
+                    archive.finalize();
                 });
             });
         });

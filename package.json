@@ -29,21 +29,19 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
-    "express":"4.9.3",
-    "mime":"1.2.11",
-    "rimraf":"2.2.8",
-    "semver":"3.0.1",
-    "underscore":"1.7.0",
-    "node-native-zip":"1.1.0",
+    "express": "4.9.3",
+    "mime": "1.2.11",
+    "rimraf": "2.2.8",
+    "semver": "3.0.1",
+    "underscore": "1.7.0",
     "grunt-contrib-concat": "0.5.0",
     "grunt-contrib-uglify": "0.6.0",
     "grunt-cli": "0.1.13",
-    "grunt": "0.4.5"
+    "grunt": "0.4.5",
+    "archiver": "^0.11.0"
   },
-  "devDependencies": {
-    },
+  "devDependencies": {},
   "bundleDependencies": [],
-
   "private": true,
   "main": "server.js"
 }
