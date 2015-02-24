@@ -2,17 +2,6 @@
     "version": {
         "group": "exclude"
     },
-    "src/authorization/adapters/oauth2": {
-        "external": [
-            "src/aerogear.core",
-            "src/aerogear.ajax",
-            "src/authorization/aerogear.authz"
-        ],
-        "description": "OAuth2 Authorization Adapter",
-        "label": "OAuth2",
-        "group": "Authorization",
-        "groupLabel" : "Authorization"
-    },
     "src/crypto/aerogear.crypto": {
         "external": [
             "external/crypto/sjcl",
@@ -32,7 +21,7 @@
         "description": "Vert.x notifier Adapter",
         "label": "Vert.x",
         "group": "notifier",
-        "groupLabel" : "Notifer"
+        "groupLabel" : "Notifer - Deprecated"
     },
     "src/notifier/adapters/stompws": {
         "external": [
@@ -43,7 +32,7 @@
         "description": "STOMP over Websockets Notifier Adapter",
         "label": "STOMP",
         "group": "notifier",
-        "groupLabel" : "Notifier"
+        "groupLabel" : "Notifier - Deprecated"
     },
     "src/notifier/adapters/mqttws": {
         "external": [
@@ -54,7 +43,7 @@
         "description": "MQTT over Websockets Notifier Adapter",
         "label": "MQTT",
         "group": "notifier",
-        "groupLabel" : "Notifier"
+        "groupLabel" : "Notifier - Deprecated"
     },
     "src/notifier/adapters/simplePush": {
         "external": [
@@ -70,8 +59,7 @@
     },
     "src/unifiedpush/aerogear.unifiedpush": {
         "external": [
-            "src/aerogear.core",
-            "src/aerogear.ajax"
+            "src/aerogear.core"
         ],
         "description": "AeroGear UnifiedPush Client SDK",
         "label": "UnifiedPush Client SDK",
